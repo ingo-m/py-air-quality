@@ -59,7 +59,7 @@ df['daytime'] = daytime
 df_pm25 = df[['daytime', 'weekend', 'pm25']]
 df_pm10 = df[['daytime', 'weekend', 'pm10']]
 df_pm25 = df_pm25.rename(columns={'pm25': 'pollution'})
-df_pm10 = df_pm25.rename(columns={'pm10': 'pollution'})
+df_pm10 = df_pm10.rename(columns={'pm10': 'pollution'})
 df_pm25['type'] = 'pm25'
 df_pm10['type'] = 'pm10'
 df = pd.concat([df_pm25, df_pm10], axis=0, ignore_index=True)
@@ -75,6 +75,11 @@ dict_plot = {'weekend': df_weekend,
              'weekday': df_weekday,
              }
 
+colours = [
+    [float(x) / 255.0 for x in [255, 212, 42, 255]],
+    [float(x) / 255.0 for x in [42, 206, 252, 255]],
+    ]
+
 # Create separate plots for weekdays (Monday to Friday) and weekend (Saturday
 # and Sunday), which will be saved in separate figures.
 for plot_name, df_plot in dict_plot.items():
@@ -84,6 +89,13 @@ for plot_name, df_plot in dict_plot.items():
         y='pollution',
         hue='type',
         data=df_plot,
+        estimator='mean',
+        ci='sd',
+        #palette=colours,
+        err_style='band',
+        err_kws={'alpha': 0.05,
+                 'linewidth': 0.0,
+                 }
         )
 
     graph.axes.set_xlim(-0.5, 24.5)
