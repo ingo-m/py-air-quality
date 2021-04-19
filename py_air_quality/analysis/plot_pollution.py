@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from dateutil import tz
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 # ------------------------------------------------------------------------------
@@ -28,10 +28,10 @@ df = df.astype({'pm25': np.float32, 'pm10': np.float32})
 
 df['datetime'] = [datetime.fromtimestamp(x) for x in df['timestamp'].tolist()]
 
-
 # Convert time from UTC to local time zone:
 from_zone = tz.tzutc()
 to_zone = tz.tzlocal()
+
 # Tell the datetime object that it's in UTC time zone:
 df['datetime'] = [x.replace(tzinfo=from_zone) for x in df['datetime'].tolist()]
 
@@ -46,6 +46,19 @@ df['weekday'] = [x.weekday() for x in df['datetime'].tolist()]
 # Add column for weekend (binary; 0 = weekday, 1 = weekend):
 df['weekend'] = [(5 <= x) for x in df['weekday'].tolist()]
 
+# Current, local time:
+local_now = datetime.now(tz=to_zone)
+local_now_hour = (
+    float(local_now.hour)
+    + (float(local_now.minute) / 60.0)
+    )
+
+# Add column for most recent datapoints (True for all datapoints that were
+# measured within the last 24 hours):
+utc_now = datetime.utcnow()
+yesterday_epoch = int(round((utc_now - timedelta(hours=24.0)).timestamp()))
+df['last_24_h'] = np.greater_equal(df['timestamp'].values, yesterday_epoch)
+
 # Create a timestamp ranging between 0 and 24:
 hour = [float(x.hour) for x in df['datetime'].tolist()]
 minute = [float(x.minute) for x in df['datetime'].tolist()]
@@ -56,8 +69,8 @@ df['daytime'] = daytime
 # Currently, there is one row per measurement, with separate columns for the two
 # y variables. We need to change this to 'long format', with one row per
 # datapoint.
-df_pm25 = df[['daytime', 'weekend', 'pm25']]
-df_pm10 = df[['daytime', 'weekend', 'pm10']]
+df_pm25 = df[['daytime', 'weekend', 'last_24_h', 'pm25']]
+df_pm10 = df[['daytime', 'weekend', 'last_24_h', 'pm10']]
 df_pm25 = df_pm25.rename(columns={'pm25': 'pollution'})
 df_pm10 = df_pm10.rename(columns={'pm10': 'pollution'})
 df_pm25['type'] = 'pm25'
@@ -70,9 +83,11 @@ df = pd.concat([df_pm25, df_pm10], axis=0, ignore_index=True)
 
 df_weekend = df.loc[df['weekend'] == True]
 df_weekday = df.loc[df['weekend'] == False]
+df_last_24_h = df.loc[df['last_24_h'] == True]
 
 dict_plot = {'weekend': df_weekend,
              'weekday': df_weekday,
+             'last_24_h': df_last_24_h,
              }
 
 colours = [
@@ -108,6 +123,15 @@ for plot_name, df_plot in dict_plot.items():
     graph.axes.tick_params(labelsize=14)
     graph.axes.spines['top'].set_visible(False)
     graph.axes.spines['right'].set_visible(False)
+
+    # Vertical line representing current time:
+    if plot_name == 'last_24_h':
+        graph.axvline(x=local_now_hour,
+                      ymin=0,
+                      ymax=1,
+                      color=[0.75, 0.75, 0.75],
+                      linewidth=0.75,
+                      )
 
     # Adjust legend:
     graph.legend_.set_title(None)
