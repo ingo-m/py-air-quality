@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""
+To continuously refresh plots via cron tab:
+
+*/5 * * * * /home/pi/py_main/bin/python /home/pi/github/py-air-quality/py_air_quality/analysis/plot_pollution.py
+
+"""
 
 
 import numpy as np
@@ -7,18 +13,23 @@ import pandas as pd
 import seaborn as sns
 from dateutil import tz
 from datetime import datetime, timedelta
+from time import sleep
 
 
 # ------------------------------------------------------------------------------
 # *** Define parameters
 
-path_csv = '/home/john/PhD/GitHub/py-air-quality/py_air_quality/data/baseline_measurement.csv'
+path_csv = '/home/pi/air_quality/baseline_measurement.csv'
 
-path_plot = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_plots/baseline_{}.png'
+path_plot = '/home/pi/air_quality/baseline_{}.png'
 
 
 # ------------------------------------------------------------------------------
 # *** Read & preprocess data
+
+# Wait for the measurement to finish (assuming that the measurement is done at
+# the same frequency, through cron tab).
+sleep(60)
 
 df = pd.read_csv(path_csv)
 
