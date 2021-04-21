@@ -5,22 +5,6 @@ Serve air polution plots via local network.
 
 Assumes that the respective image files are created by
 `py_air_quality/analysis/plot_pollution.py`
-
-Install dependencies:
-pip install fastapi aiofiles uvicorn
-
-Start the server like this, adjusting the IP address to the raspberry pi's
-address:
-tmux
-cd /home/pi/github/py-air-quality/py_air_quality/server/
-uvicorn server:app --host 123.456.7.890
-
-You can now find the plots from another device on your local network at these
-URLs (adjust the IP to the raspberry pi's address):
-http://123.456.7.890:8000/last_24_h
-http://123.456.7.890:8000/weekday
-http://123.456.7.890:8000/weekend
-
 """
 
 from fastapi import FastAPI

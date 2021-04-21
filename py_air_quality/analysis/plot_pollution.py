@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-To continuously refresh plots via cron tab:
-
-*/5 * * * * /home/pi/py_main/bin/python /home/pi/github/py-air-quality/py_air_quality/analysis/plot_pollution.py
-
+Plot air polution measurement data.
 """
 
 

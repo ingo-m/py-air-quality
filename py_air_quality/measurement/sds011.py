@@ -1,16 +1,5 @@
 """
 Monitor air quality with SDS011 sensor.
-
-Install dependencies:
-pip install pyserial py-sds011
-
-See:
-https://github.com/ikalchev/py-sds011
-https://www.raspberrypi.org/blog/monitor-air-quality-with-a-raspberry-pi/
-https://openschoolsolutions.org/measure-particulate-matter-with-a-raspberry-pi/
-
-*/5 * * * * /home/pi/py_main/bin/python /home/pi/air_quality/measurement.py
-
 """
 
 
