@@ -41,11 +41,11 @@ crontab -e
 If this is the first time you opened crontab, you might be asked which editor
 you would like to use. I would recommend `nano`.
 
-Scroll to the bottom of the document, and paste the following two lines. If you
-selected the `nano` text editor in the previous step, you can paste by pressing
-`Ctrl` + `Shift` + `v` at the same time. The first line will schedule a new
-measurement every 5 minutes, and the second line will refresh the plots with the
-results.
+Scroll to the bottom of the document (by pressing `↓`), and paste the following
+two lines. If you selected the `nano` text editor in the previous step, you can
+paste by pressing `Ctrl` + `Shift` + `v` at the same time. The first line will
+schedule a new measurement every 5 minutes, and the second line will refresh the
+plots with the results.
 ```bash
 */5 * * * * /home/pi/py_main/bin/python /home/pi/github/py-air-quality/py_air_quality/measurement/sds011.py
 */5 * * * * /home/pi/py_main/bin/python /home/pi/github/py-air-quality/py_air_quality/analysis/plot_pollution.py
@@ -82,7 +82,7 @@ For more background information, see:
 ## Part 2 - Show plots on other devices (optional)
 
 At this point, you are able to continuously measure the air particulate
-concentraion, and inspect the resulting plots, which are updated automatically.
+concentration, and inspect the resulting plots, which are updated automatically.
 If you would like to be able to easily view the most recent plots on other
 devices on your local network (another computer, or your phone) in a web
 browser, follow the next steps.
