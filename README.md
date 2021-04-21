@@ -47,7 +47,7 @@ paste by pressing `Ctrl` + `Shift` + `v` at the same time. The first line will
 schedule a new measurement every 5 minutes, and the second line will refresh the
 plots with the results.
 ```bash
-*/5 * * * * /home/pi/py_main/bin/python /home/pi/github/py-air-quality/py_air_quality/measurement/sds011.py
+*/5 * * * * /home/pi/py_main/bin/python /home/pi/github/py-air-quality/py_air_quality/measurement/measurement.py
 */5 * * * * /home/pi/py_main/bin/python /home/pi/github/py-air-quality/py_air_quality/analysis/plot_pollution.py
 ```
 Leave the text editor by pressing `Ctrl` + `x` (at the same time), followed by
