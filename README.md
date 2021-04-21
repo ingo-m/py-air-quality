@@ -6,8 +6,8 @@ Measure and analyse air particulate concentration using a Raspberry Pi and a
 
 ## Part 1 - Measure & plot air particulate concentration  
 
-You can follow these instructions for setting up your measurement device with
-minimal effor. From the bash command line, create a directory, and clone this
+Follow these instructions to continuously measure and plot the air particulate
+concentration.   From the bash command line, create a directory, and clone this
 repository:
 ```bash
 mkdir /home/pi/github
@@ -124,7 +124,7 @@ from the previous step):
 - http://123.456.7.890:8000/weekday
 - http://123.456.7.890:8000/weekend
 
-You can leave the server permanently active, it consumes practically now system
+You can leave the server permanently active, it consumes practically no system
 resources when running in the background. If you would like to shut down the
 server at some point, you first have to re-connect to the tmux session:
 ```bash
