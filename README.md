@@ -2,7 +2,7 @@
 Measure and analyse air particulate concentration using a Raspberry Pi and a
 [Nova Fitness SDS011 particulate sensor](https://www.berrybase.de/en/sensors-modules/gas-dust/nova-fitness-sds011-feinstaub-sensor-inkl.-usb-adapter).
 
-<img src="py_air_quality/data/example_plot.png" width=300 align="right" />
+<img src="py_air_quality/data/example_plot.png" width=300 align="centre" />
 
 ## Part 1 - Measure & plot air particulate concentration  
 
