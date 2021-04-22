@@ -93,9 +93,9 @@ df_weekend = df.loc[df['weekend'] == True]
 df_weekday = df.loc[df['weekend'] == False]
 df_last_24_h = df.loc[df['last_24_h'] == True]
 
-dict_plot = {'weekend': df_weekend,
+dict_plot = {'last_24_h': df_last_24_h,
+             'weekend': df_weekend,
              'weekday': df_weekday,
-             'last_24_h': df_last_24_h,
              }
 
 colours = [

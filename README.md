@@ -82,6 +82,10 @@ weekdays (i.e. Monday to Friday, `baseline_weekday.png`)
 - The mean air particulate concentration since the measurement started for
 weekends (i.e. Saturday and Sunday, `baseline_weekend.png`)
 
+The plots showing the mean air particulate concentration for weekdays and
+weekends will only show up once you have collected data over at least 24
+hours.
+
 For more background information, see:
 - https://github.com/ikalchev/py-sds011
 - https://www.raspberrypi.org/blog/monitor-air-quality-with-a-raspberry-pi/
