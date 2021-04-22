@@ -20,6 +20,14 @@ Create another folder, where measurement data will be saved:
 mkdir /home/pi/air_quality
 ```
 
+Install numpy dependency (will be needed for creating the plots, not for the
+actual measurement):
+```bash
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install libatlas-base-dev
+```
+
 Create a virtual python environment, activate the environment, and install all
 necessary dependencies:
 ```bash
