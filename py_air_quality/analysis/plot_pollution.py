@@ -83,7 +83,7 @@ df_pm25 = df_pm25.rename(columns={'pm25': 'pollution'})
 df_pm10 = df_pm10.rename(columns={'pm10': 'pollution'})
 df_pm25['type'] = 'pm25'
 df_pm10['type'] = 'pm10'
-df = pd.concat([df_pm25, df_pm10], axis=0, ignore_index=True)
+df = pd.concat([df_pm10, df_pm25], axis=0, ignore_index=True)
 
 
 # ------------------------------------------------------------------------------
@@ -99,8 +99,8 @@ dict_plot = {'last_24_h': df_last_24_h,
              }
 
 colours = [
-    [float(x) / 255.0 for x in [255, 212, 42, 255]],
-    [float(x) / 255.0 for x in [42, 206, 252, 255]],
+    [float(x) / 255.0 for x in [44, 178, 252, 255]],
+    [float(x) / 255.0 for x in [255, 0, 102, 255]],
     ]
 
 # Create separate plots for weekdays (Monday to Friday) and weekend (Saturday
@@ -114,7 +114,7 @@ for plot_name, df_plot in dict_plot.items():
         data=df_plot,
         estimator='mean',
         ci='sd',
-        #palette=colours,
+        palette=colours,
         err_style='band',
         err_kws={'alpha': 0.05,
                  'linewidth': 0.0,
@@ -141,15 +141,31 @@ for plot_name, df_plot in dict_plot.items():
                       linewidth=0.75,
                       )
 
+    # Calculate and plot mean particulate concentration.
+    pollution_mean = df_plot[['pollution', 'type']].groupby(['type']).mean()
+    pm10_mean = pollution_mean.loc['pm10'].values[0]
+    pm25_mean = pollution_mean.loc['pm25'].values[0]
+    graph.hlines(y=[pm10_mean, pm25_mean],
+                 xmin=0.0,
+                 xmax=24.0,
+                 color=colours,
+                 linewidth=1.0,
+                 linestyles='dotted',
+                 )
+
     # Adjust legend:
     graph.legend_.set_title(None)
     graph.legend_.set_frame_on(False)
     for i in range(2):
         legend_text = graph.legend_.texts[i].get_text()
         if legend_text == 'pm25':
-            graph.legend_.texts[i].set_text('$PM_{2.5}$')
+            graph.legend_.texts[i].set_text(
+                '$PM_{2.5}$ mean = ' + str(np.around(pm25_mean, decimals=1))
+                )
         elif legend_text == 'pm10':
-            graph.legend_.texts[i].set_text('$PM_{10}$')
+            graph.legend_.texts[i].set_text(
+                '$PM_{10}$ mean = ' + str(np.around(pm10_mean, decimals=1))
+                )
 
     # Save figure:
     figure = graph.get_figure()
