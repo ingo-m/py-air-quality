@@ -11,7 +11,7 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse
 
 img_path_last_24_h = '/home/pi/air_quality/with_filter_last_24_h.png'
-img_path_weekday = '/home/pi/air_quality/with_filtere_weekday.png'
+img_path_weekday = '/home/pi/air_quality/with_filter_weekday.png'
 img_path_weekend = '/home/pi/air_quality/with_filter_weekend.png'
 
 app = FastAPI()
