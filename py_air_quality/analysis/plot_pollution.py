@@ -16,9 +16,9 @@ from time import sleep
 # ------------------------------------------------------------------------------
 # *** Define parameters
 
-path_csv = '/home/pi/air_quality/measurement_with_filter.csv'
+path_csv = '/home/pi/air_quality/baseline_measurement.csv'
 
-path_plot = '/home/pi/air_quality/with_filter_{}.png'
+path_plot = '/home/pi/air_quality/baseline_{}.png'
 
 
 # ------------------------------------------------------------------------------
