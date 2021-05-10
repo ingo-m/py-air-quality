@@ -13,7 +13,7 @@ from sds011 import SDS011
 # ------------------------------------------------------------------------------
 # *** Define parameters
 
-path_csv = '/home/pi/air_quality/baseline_measurement.csv'
+path_csv = '/home/pi/air_quality/measurement_with_filter.csv'
 
 
 # ------------------------------------------------------------------------------
