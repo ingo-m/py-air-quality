@@ -15,12 +15,12 @@ from time import sleep
 from read_csv_data import read_csv_data
 
 
-# ------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 # *** Define parameters
 
-path_csv = '/home/pi/air_quality/baseline_measurement.csv'
+path_csv = '/home/pi/air_quality/measurement_with_filter.csv'
 
-path_plot = '/home/pi/air_quality/baseline_{}.png'
+path_plot = '/home/pi/air_quality/with_filter_{}.png'
 
 
 # ------------------------------------------------------------------------------
