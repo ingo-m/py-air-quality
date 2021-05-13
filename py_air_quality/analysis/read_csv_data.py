@@ -1,3 +1,6 @@
+import pandas as pd
+
+
 def read_csv_data(path_csv):
     """
     Read & process measurement data from csv file.
