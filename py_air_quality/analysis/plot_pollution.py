@@ -15,7 +15,7 @@ from time import sleep
 from read_csv_data import read_csv_data
 
 
-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # *** Define parameters
 
 path_csv = '/home/pi/air_quality/measurement_with_filter.csv'
