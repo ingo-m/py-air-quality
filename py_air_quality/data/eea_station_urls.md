@@ -14,3 +14,9 @@ https://ereporting.blob.core.windows.net/downloadservice/DE/DE_6001_71701_2021_t
 
 Berlin Frankfurter Allee (DEBE065)
 https://ereporting.blob.core.windows.net/downloadservice/DE/DE_6001_71702_2021_timeseries.csv
+
+Aggregate data with one data point per day, including pm2.5 and pm10, can be
+downloaded from:
+https://aqicn.org/data-platform/covid19/
+Note that this data is averaged across measurement stations, with one value per
+city.
