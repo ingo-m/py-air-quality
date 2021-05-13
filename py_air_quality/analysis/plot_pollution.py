@@ -67,9 +67,9 @@ df = pd.concat([df_pm10, df_pm25], axis=0, ignore_index=True)
 # ------------------------------------------------------------------------------
 # *** Create plots
 
-df_weekend = df.loc[df['weekend'] is True]
-df_weekday = df.loc[df['weekend'] is False]
-df_last_24_h = df.loc[df['last_24_h'] is True]
+df_weekend = df.loc[df['weekend'] == True]
+df_weekday = df.loc[df['weekend'] == False]
+df_last_24_h = df.loc[df['last_24_h'] == True]
 
 dict_plot = {'last_24_h': df_last_24_h,
              'weekday': df_weekday,
