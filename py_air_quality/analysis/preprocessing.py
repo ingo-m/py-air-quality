@@ -1,18 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Analyse the effect of an air filter on indoor air quality.
+Preprocess and combine data from external & internal sources for analysis.
 
-...
+Read data from external data source (outdoor measurement station, e.g. obtained
+from aqicn.org), and data from internal data source (indoor measurement with
+SDS011 particulate sensor), preprocess the data, and export to csv for
+regression analysis in R.
 
 """
 
-# import numpy as np
-# import statsmodels as sm
-
-from datetime import datetime, timedelta, timezone
 import pandas as pd
-import seaborn as sns
+from datetime import datetime
 
 from read_csv_data import read_csv_data
 
@@ -29,6 +28,9 @@ path_csv_indoor_filter = '/home/john/PhD/GitHub/py-air-quality/py_air_quality/da
 # Path of external air quality measurement data, obtained from
 # https://aqicn.org/data-platform/covid19/
 path_csv_external = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_quality_external_data/waqi-covid19-airqualitydata-2020.csv'
+
+# Output path of preprocessed csv file (to be imported into R for analysis):
+path_csv_out = '/home/john/PhD/GitHub/py-air-quality/py_air_quality/data/preprocessed.csv'
 
 # Which pollutant to analyse ('pm25' or 'pm10'):
 pollutant = 'pm25'
@@ -56,6 +58,7 @@ df_external['timestamp'] = \
 
 df_external = df_external[['timestamp', 'median']]
 df_external = df_external.rename(columns={'median': (pollutant + '_external')})
+
 
 # ------------------------------------------------------------------------------
 # *** Read data from internal data source
@@ -89,12 +92,8 @@ df = pd.merge_asof(
     direction='nearest',
     )
 
+# Exclude nan:
+df = df[df['pm25_internal'].notna()]
+df = df[df['pm25_external'].notna()]
 
-# WIP
-
-
-# ar_mod = AutoReg(signal)
-# ar_res = ar_mod.fit()
-
-# https://www.statsmodels.org/stable/generated/statsmodels.tsa.ar_model.AutoReg.html#statsmodels.tsa.ar_model.AutoReg
-# ar_model = sm.tsa.AutoReg(df['spend'], freq='1')
+df.to_csv(path_csv_out, sep=';', index=False)
