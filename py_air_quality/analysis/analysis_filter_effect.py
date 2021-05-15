@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Preprocess and combine data from external & internal sources for analysis.
+Test for the effect of an air purifier (filter) on indoor air quality.
 
-Read data from external data source (outdoor measurement station, e.g. obtained
-from aqicn.org), and data from internal data source (indoor measurement with
-SDS011 particulate sensor), preprocess the data, and export to csv for
-regression analysis in R.
+To assess the effect of the filter, we combine data from external & internal
+sources for analysis. The external data is the air quality index based on
+measurements at outdoor measurement stations (obtained from aqicn.org). The
+internal data source is an SDS011 particulate sensor.
+
+The data is read data from csv files, processed, and plots are created.
+Processed data is exported for further analysis in R.
 
 """
 
