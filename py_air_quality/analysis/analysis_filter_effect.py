@@ -35,8 +35,9 @@ path_csv_indoor_filter = '/home/john/PhD/GitHub/py-air-quality/py_air_quality/da
 # https://aqicn.org/data-platform/covid19/
 path_csv_external = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_quality_external_data/waqi-covid19-airqualitydata-2020.csv'
 
-# Output directory for processed csv files (to be imported into R for analysis):
-path_csv_out = '/home/john/PhD/GitHub/py-air-quality/py_air_quality/data/'
+# Output directory for plot & processed csv files (to be imported into R for
+# analysis):
+path_out = '/home/john/PhD/GitHub/py-air-quality/py_air_quality/data/'
 
 # Which pollutant to analyse ('pm25' or 'pm10'):
 pollutant = 'pm25'
@@ -93,7 +94,8 @@ df_baseline['filter'] = False
 df_filter['filter'] = True
 df_internal = pd.concat([df_baseline, df_filter], axis=0, ignore_index=True)
 
-df_internal = df_internal[['timestamp', 'datetime', pollutant, 'filter', 'weekend']]
+df_internal = \
+    df_internal[['timestamp', 'datetime', pollutant, 'filter', 'weekend']]
 df_internal = df_internal.rename(columns={pollutant: (pollutant + '_internal')})
 
 
@@ -158,6 +160,17 @@ df_tmp_int['source'] = 'internal'
 df_daily = pd.concat([df_tmp_ext, df_tmp_int], axis=0, ignore_index=True)
 
 
+
+
+# ------------------------------------------------------------------------------
+# ***
+
+colours = [
+    [float(x) / 255.0 for x in [255, 0, 102, 255]],
+    [float(x) / 255.0 for x in [44, 178, 252, 255]],
+    ]
+
+
 graph = sns.catplot(
     data=df_daily,
     kind='bar',
@@ -165,10 +178,32 @@ graph = sns.catplot(
     y='pm25',
     hue='filter',
     ci='sd',
-    #palette="dark",
-    #alpha=.6,
-    #height=6,
+    palette=colours,
     )
+
+# Axis layout:
+graph.axes[0][0].set_xlabel(None)
+graph.axes[0][0].set_ylabel('Air pollutiuon [a.u.]', fontsize=18)
+graph.axes[0][0].set_yticks([0.0, 0.5, 1.0, 1.5])
+graph.axes[0][0].set_xticklabels(['Outdoors', 'Indoors'])
+graph.axes[0][0].tick_params(labelsize=16)
+
+# Adjust legend:
+graph.legend.set_title('Filter', prop={'size': 16})
+for i in range(2):
+    legend_text = graph.legend.texts[i].get_text()
+    if legend_text == '0.0':
+        graph.legend.texts[i].set_text('Off')
+        graph.legend.texts[i].set_fontsize(16)
+    elif legend_text == '1.0':
+        graph.legend.texts[i].set_text('On')
+        graph.legend.texts[i].set_fontsize(16)
+
+# Save figure:
+graph.savefig(os.path.join(path_out, 'filter_bar_plot.png'),
+               dpi=200.0,
+               bbox_inches='tight',
+               )
 
 
 
@@ -195,7 +230,7 @@ df = df[df['pm25_internal'].notna()]
 df = df[df['pm25_external'].notna()]
 
 df.to_csv(
-    os.path.join(path_csv_out, 'preprocessed.csv'),
+    os.path.join(path_out, 'preprocessed.csv'),
     sep=';',
     index=False,
     )
