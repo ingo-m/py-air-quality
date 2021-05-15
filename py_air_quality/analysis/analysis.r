@@ -11,7 +11,11 @@ head(df)
 #            data=df)
 # summary(model)
 
+# form=(~1|timestamp)
+
 model = gls(pm25_internal ~ filter + weekend + pm25_external,
             data=df,
-            correlation=corAR1(form=(~timestamp)),
+            correlation=corCAR1(form=(~timestamp)),
             verbose=TRUE)
+
+summary(model)
