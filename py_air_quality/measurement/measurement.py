@@ -7,13 +7,26 @@ import os
 import csv
 import time
 from datetime import datetime
+
 from sds011 import SDS011
+
+from py_air_quality.internal.settings import settings
 
 
 # ------------------------------------------------------------------------------
-# *** Define parameters
+# *** Load settings from .env file
 
-path_csv = '/home/pi/air_quality/baseline_measurement.csv'
+# Experimental condition, e.g. 'baseline' or 'with_filter':
+experimental_condition = settings.EXPERIMENTAL_CONDITION
+
+# Directory where to find data, and save plots (e.g. '/home/pi/air_quality/'):
+data_directory = settings.DATA_DIRECTORY
+
+# Path of csv file from which to load measurement data:
+path_csv = os.path.join(
+    data_directory,
+    'measurement_{}.csv'.format(experimental_condition)
+    )
 
 
 # ------------------------------------------------------------------------------
