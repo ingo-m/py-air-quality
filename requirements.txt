@@ -6,4 +6,4 @@ aiofiles
 uvicorn
 pyserial
 py-sds011
-dotenv
+python-dotenv
