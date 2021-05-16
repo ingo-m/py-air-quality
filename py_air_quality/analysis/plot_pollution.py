@@ -4,7 +4,7 @@
 Plot air polution measurement data.
 """
 
-
+import os
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -12,15 +12,30 @@ from dateutil import tz
 from datetime import datetime, timedelta
 from time import sleep
 
-from read_csv_data import read_csv_data
+from py_air_quality.crud.read_csv_data import read_csv_data
+from py_air_quality.internal.settings import settings
 
 
 # ------------------------------------------------------------------------------
-# *** Define parameters
+# *** Load settings from .env file
 
-path_csv = '/home/pi/air_quality/measurement_with_filter.csv'
+# Experimental condition, e.g. 'baseline' or 'with_filter':
+experimental_condition = settings.EXPERIMENTAL_CONDITION
 
-path_plot = '/home/pi/air_quality/with_filter_{}.png'
+# Directory where to find data, and save plots (e.g. '/home/pi/air_quality/'):
+data_directory = settings.DATA_DIRECTORY
+
+# Path of csv file from which to load measurement data:
+path_csv = os.path.join(
+    data_directory,
+    'measurement_{}.csv'.format(experimental_condition)
+    )
+
+# Output path for plots:
+path_plot = os.path.join(
+    data_directory,
+    (experimental_condition + '_{}.png')
+    )
 
 
 # ------------------------------------------------------------------------------
@@ -120,30 +135,40 @@ for plot_name, df_plot in dict_plot.items():
                       )
 
     # Calculate and plot mean particulate concentration.
-    pollution_mean = df_plot[['pollution', 'type']].groupby(['type']).mean()
-    pm10_mean = pollution_mean.loc['pm10'].values[0]
-    pm25_mean = pollution_mean.loc['pm25'].values[0]
-    graph.hlines(y=[pm10_mean, pm25_mean],
-                 xmin=0.0,
-                 xmax=24.0,
-                 color=colours,
-                 linewidth=1.0,
-                 linestyles='dotted',
-                 )
+    try:
 
-    # Adjust legend:
-    graph.legend_.set_title(None)
-    graph.legend_.set_frame_on(False)
-    for i in range(2):
-        legend_text = graph.legend_.texts[i].get_text()
-        if legend_text == 'pm25':
-            graph.legend_.texts[i].set_text(
-                '$PM_{2.5}$ mean = ' + str(np.around(pm25_mean, decimals=1))
-                )
-        elif legend_text == 'pm10':
-            graph.legend_.texts[i].set_text(
-                '$PM_{10}$ mean = ' + str(np.around(pm10_mean, decimals=1))
-                )
+        pollution_mean = df_plot[['pollution', 'type']].groupby(['type']).mean()
+        pm10_mean = pollution_mean.loc['pm10'].values[0]
+        pm25_mean = pollution_mean.loc['pm25'].values[0]
+        graph.hlines(y=[pm10_mean, pm25_mean],
+                     xmin=0.0,
+                     xmax=24.0,
+                     color=colours,
+                     linewidth=1.0,
+                     linestyles='dotted',
+                     )
+
+        # Adjust legend:
+        graph.legend_.set_title(None)
+        graph.legend_.set_frame_on(False)
+        for i in range(2):
+            legend_text = graph.legend_.texts[i].get_text()
+            if legend_text == 'pm25':
+                graph.legend_.texts[i].set_text(
+                    '$PM_{2.5}$ mean = ' + str(np.around(pm25_mean, decimals=1))
+                    )
+            elif legend_text == 'pm10':
+                graph.legend_.texts[i].set_text(
+                    '$PM_{10}$ mean = ' + str(np.around(pm10_mean, decimals=1))
+                    )
+
+    except Exception:
+
+        # When starting a new measurement, there will initially be missing data
+        # (e.g. the mean for weekends can't be calculated yet it a measurement
+        # was just started on a weekday).
+        print(plot_name)
+        pass
 
     # Save figure:
     figure = graph.get_figure()

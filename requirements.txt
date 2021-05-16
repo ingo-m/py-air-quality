@@ -1,0 +1,9 @@
+numpy
+pandas
+seaborn
+fastapi
+aiofiles
+uvicorn
+pyserial
+py-sds011
+dotenv

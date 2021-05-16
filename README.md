@@ -7,8 +7,11 @@ Measure and analyse air particulate concentration using a Raspberry Pi and a
 ## Part 1 - Measure & plot air particulate concentration  
 
 Follow these instructions to continuously measure and plot the air particulate
-concentration.   From the bash command line, create a directory, and clone this
-repository:
+concentration. The following assumes that you are using a Raspberry Pi running
+Raspberry Pi OS, and the default user name 'pi'. If your user name is not 'pi',
+you will have to adjust the file paths accordingly.
+
+ From the bash command line, create a directory, and clone this repository:
 ```bash
 mkdir /home/pi/github
 cd /home/pi/github
@@ -20,20 +23,21 @@ Create another folder, where measurement data will be saved:
 mkdir /home/pi/air_quality
 ```
 
-Install numpy dependency (will be needed for creating the plots, not for the
-actual measurement):
+Install dependency (only required for creating the plots, not for the actual
+measurement):
 ```bash
 sudo apt-get update
 sudo apt-get upgrade
 sudo apt-get install libatlas-base-dev
 ```
 
-Create a virtual python environment, activate the environment, and install all
-necessary dependencies:
+Create a virtual python environment, activate the environment, and install the
+py-air-quality module with all necessary dependencies:
 ```bash
 python3 -m venv /home/pi/py_main
 source /home/pi/py_main/bin/activate
-pip install numpy pandas seaborn fastapi aiofiles uvicorn pyserial py-sds011
+pip install -r /home/pi/github/py-air-quality/requirements.txt
+pip install -e /home/pi/github/py-air-quality
 ```
 
 Connect the SDS011 particulate sensor to one of your Raspberry Pi's USB ports.
