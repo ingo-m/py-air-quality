@@ -138,6 +138,7 @@ Start the server that will make the plots available on your local network like
 this, after adjusting the IP address with the one from the previous step:
 ```
 tmux
+source /home/pi/py_main/bin/activate
 cd /home/pi/github/py-air-quality/py_air_quality/server/
 uvicorn server:app --host 123.456.7.890
 ```
