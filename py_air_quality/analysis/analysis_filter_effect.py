@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+WORK IN PROGRESS
+
 Test for the effect of an air purifier (filter) on indoor air quality.
 
 To assess the effect of the filter, we combine data from external & internal
@@ -234,5 +236,3 @@ df.to_csv(
     sep=';',
     index=False,
     )
-
-
