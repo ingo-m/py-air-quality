@@ -7,18 +7,19 @@ Measure and analyse air particulate concentration using a Raspberry Pi and a
 ## Part 1 - Measure & plot air particulate concentration  
 
 Follow these instructions to continuously measure and plot the air particulate
-concentration. The following assumes that you are using a Raspberry Pi running
-Raspberry Pi OS, and the default user name 'pi'. If your user name is not 'pi',
-you will have to adjust the file paths accordingly.
+concentration. The following instructions assumes that you are using a Raspberry
+Pi running Raspberry Pi OS, and the default user name 'pi'. If your user name is
+not 'pi', you will have to adjust the file paths in the following code snippets
+accordingly.
 
- From the bash command line, create a directory, and clone this repository:
+From the bash command line, create a directory, and clone this repository:
 ```bash
 mkdir /home/pi/github
 cd /home/pi/github
 git clone https://github.com/ingo-m/py-air-quality
 ```
 
-Create another folder, where measurement data will be saved:
+Create another folder, where measurement data and plots will be saved:
 ```bash
 mkdir /home/pi/air_quality
 ```
@@ -43,7 +44,7 @@ pip install -e /home/pi/github/py-air-quality
 Connect the SDS011 particulate sensor to one of your Raspberry Pi's USB ports.
 
 To continuously measure the concentration of air particulates every 5 minutes,
-we can use cron tab. You can read an introduction to cron tab [here](https://linuxiac.com/how-to-use-cron-to-schedule-tasks-the-complete-beginners-guide/).
+use cron tab. You can read an introduction to cron tab [here](https://linuxiac.com/how-to-use-cron-to-schedule-tasks-the-complete-beginners-guide/).
 
 Open crontab from the bash command line:
 ```bash
@@ -60,7 +61,7 @@ schedule a new measurement every 5 minutes, and the second line will refresh the
 plots with the results.
 ```bash
 */5 * * * * /home/pi/py_main/bin/python /home/pi/github/py-air-quality/py_air_quality/measurement/measurement.py
-*/5 * * * * /home/pi/py_main/bin/python /home/pi/github/py-air-quality/py_air_quality/analysis/plot_pollution.py
+*/5 * * * * /home/pi/py_main/bin/python /home/pi/github/py-air-quality/py_air_quality/server/plot_pollution.py
 ```
 Leave the text editor by pressing `Ctrl` + `x` (at the same time), followed by
 `y` and `Enter`.
@@ -71,31 +72,50 @@ crontab -l
 ```
 
 By default, the measurement data will be written into a text file located at
-`/home/pi/air_quality/baseline_measurement.csv`. With every measurement, a new
-line will be appended. The file contains three columns, separated by `,`. The
-first row is an epoch time stamp (an easy-to use time format, see [Wikipedia](https://en.wikipedia.org/wiki/Epoch_(computing))
-for more information). The epoch time stamp is often easier to use when
-analysing data, and can be converted into a human-readable time format when
-plotting the data.
+`/home/pi/air_quality/baseline_measurement.csv`. Every 5 minutes, after each
+measurement, a new line will be appended. The file contains three columns,
+separated by `,`. The first row is an epoch time stamp (an easy-to use time
+format, see [Wikipedia](https://en.wikipedia.org/wiki/Epoch_(computing)) for
+more information). The epoch time stamp is often easier to use when analysing
+data, and can be converted into a human-readable time format when plotting the
+data.
 
 There are three separate plots showing:
 - The air particulate concentration over the last 24 hours
 (`baseline_last_24_h.png`)
-- The mean air particulate concentration since the measurement started for
-weekdays (i.e. Monday to Friday, `baseline_weekday.png`)
-- The mean air particulate concentration since the measurement started for
-weekends (i.e. Saturday and Sunday, `baseline_weekend.png`)
-
-The plots showing the mean air particulate concentration for weekdays and
-weekends will only show up once you have collected data over at least 24
-hours.
+- The mean air particulate concentration since the measurement started
+- (`combined.png`)
+- The mean air particulate concentration since the measurement started,
+- separately for weekdays (i.e. Monday to Friday, `baseline_weekday.png`)
+- The mean air particulate concentration since the measurement started,
+- separately for weekends (i.e. Saturday and Sunday, `baseline_weekend.png`)
 
 For more background information, see:
 - https://github.com/ikalchev/py-sds011
 - https://www.raspberrypi.org/blog/monitor-air-quality-with-a-raspberry-pi/
 - https://openschoolsolutions.org/measure-particulate-matter-with-a-raspberry-pi/
 
-## Part 2 - Show plots on other devices (optional)
+## Part 2 - Collect data under different conditions
+
+You might want to collect data under different conditions, such as in different
+locations (e.g. indoors and outdoors). Or you might want to test whether an [air
+filter](https://ge.philips.online/en/product/philips-ac2887-10-air-cleaner) can
+reduce the pollutant concentration within a room. The name of the csv file where
+measurement data is saved can be adjusted in the [`.env` file](https://github.com/ingo-m/py-air-quality/blob/filter/py_air_quality/internal/.env)
+located at `py-air-quality/py_air_quality/internal/.env`. For example, you might
+first collect data inside a room to establish a baseline:
+```bash
+EXPERIMENTAL_CONDITION="baseline"
+```
+After a few weeks of measurements, you could place an air filter inside the
+room, and change the `.env` file to:
+```bash
+EXPERIMENTAL_CONDITION="with_filter"
+```
+After a few more weeks of measurements, you might then compare the results with
+and without the air filter.
+
+## Part 3 - Show plots on other devices (optional)
 
 At this point, you are able to continuously measure the air particulate
 concentration, and inspect the resulting plots, which are updated automatically.
@@ -105,7 +125,7 @@ browser, follow the next steps.
 
 Please note that the plots will only be  accessible to devices logged into the
 same local network, i.e. via the same router, for security reasons. Making them
-available to the public internet is possible, but more complicated.
+available over the public internet is possible, but more complicated.
 
 Install `tmux` from the bash command line:
 ```bash
@@ -130,13 +150,17 @@ cd /home/pi/github/py-air-quality/py_air_quality/server/
 uvicorn server:app --host 123.456.7.890
 ```
 The first command (`tmux`) starts a separate terminal session that you can leave
-without terminating the process (so that the server stays on). Exit the tmux
-session by typing `Ctrl` + `b` and `d`.
+without terminating the process (so that the server stays on). The `uvicorn`
+starts a server on the Raspberry Pi, so that other devices (on the same local
+network) can view the air pollution plots.
+
+Exit the tmux session by typing `Ctrl` + `b` and `d`.
 
 You can now view the plots in a normal web browser, from any other device on
 your local network, at these URLs (adjust the IP to the Raspberry Pi's address
 from the previous step):
 - http://123.456.7.890:8000/last_24_h
+- http://123.456.7.890:8000/combined
 - http://123.456.7.890:8000/weekday
 - http://123.456.7.890:8000/weekend
 

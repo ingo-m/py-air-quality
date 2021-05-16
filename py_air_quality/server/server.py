@@ -27,6 +27,11 @@ img_path_last_24_h = os.path.join(
     '{}_last_24_h.png'.format(experimental_condition)
     )
 
+img_path_combined = os.path.join(
+    data_directory,
+    '{}_combined.png'.format(experimental_condition)
+    )
+
 img_path_weekday = os.path.join(
     data_directory,
     '{}_weekday.png'.format(experimental_condition)
@@ -43,6 +48,11 @@ app = FastAPI()
 @app.get('/last_24_h')
 async def last_24_h():
     return FileResponse(img_path_last_24_h)
+
+
+@app.get('/combined')
+async def weekday():
+    return FileResponse(img_path_combined)
 
 
 @app.get('/weekday')

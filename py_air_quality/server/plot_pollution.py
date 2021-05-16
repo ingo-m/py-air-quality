@@ -87,6 +87,7 @@ df_weekday = df.loc[df['weekend'] == False]
 df_last_24_h = df.loc[df['last_24_h'] == True]
 
 dict_plot = {'last_24_h': df_last_24_h,
+             'combined': df,
              'weekday': df_weekday,
              'weekend': df_weekend,
              }
@@ -167,7 +168,6 @@ for plot_name, df_plot in dict_plot.items():
         # When starting a new measurement, there will initially be missing data
         # (e.g. the mean for weekends can't be calculated yet it a measurement
         # was just started on a weekday).
-        print(plot_name)
         pass
 
     # Save figure:
