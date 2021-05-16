@@ -126,13 +126,6 @@ Please note that the plots will only be  accessible to devices logged into the
 same local network, i.e. via the same router, for security reasons. Making them
 available over the public internet is possible, but more complicated.
 
-Install `tmux` from the bash command line:
-```bash
-sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get install tmux
-```
-
 Check your Raspberry Pi's IP address:
 ```bash
 hostname -I
