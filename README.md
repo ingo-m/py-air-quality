@@ -24,12 +24,11 @@ Create another folder, where measurement data and plots will be saved:
 mkdir /home/pi/air_quality
 ```
 
-Install dependency (only required for creating the plots, not for the actual
-measurement):
+Install dependencies:
 ```bash
 sudo apt-get update
 sudo apt-get upgrade
-sudo apt-get install libatlas-base-dev
+sudo apt-get install tmux libatlas-base-dev gfortran cmake python3-tables
 ```
 
 Create a virtual python environment, activate the environment, and install the
