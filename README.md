@@ -83,11 +83,11 @@ There are three separate plots showing:
 - The air particulate concentration over the last 24 hours
 (`baseline_last_24_h.png`)
 - The mean air particulate concentration since the measurement started
-- (`combined.png`)
+(`combined.png`)
 - The mean air particulate concentration since the measurement started,
-- separately for weekdays (i.e. Monday to Friday, `baseline_weekday.png`)
+separately for weekdays (i.e. Monday to Friday, `baseline_weekday.png`)
 - The mean air particulate concentration since the measurement started,
-- separately for weekends (i.e. Saturday and Sunday, `baseline_weekend.png`)
+separately for weekends (i.e. Saturday and Sunday, `baseline_weekend.png`)
 
 For more background information, see:
 - https://github.com/ikalchev/py-sds011
