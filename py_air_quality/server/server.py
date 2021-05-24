@@ -51,7 +51,7 @@ async def last_24_h():
 
 
 @app.get('/combined')
-async def weekday():
+async def combined():
     return FileResponse(img_path_combined)
 
 
