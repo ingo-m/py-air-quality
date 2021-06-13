@@ -1,6 +1,9 @@
 """
 Commit new measurement data to mongodb database.
 
+Requires database credentials to be set in
+py-air-quality/py_air_quality/internal/.credentials
+
 Can be run as a cron job:
 */5 * * * * /home/pi/py_main/bin/python /home/pi/github/py-air-quality/py_air_quality/crud/read_csv_data.py >> /home/pi/air_quality/crontab_log_db.txt 2>&1
 
