@@ -17,7 +17,7 @@ def read_csv_data(path_csv):
 
     df = df.replace(to_replace='None', value=np.nan)
 
-    df = df.astype({'pm25': np.float32, 'pm10': np.float32})
+    df = df.astype({'pm25': np.float64, 'pm10': np.float64})
 
     df['datetime'] = [
         datetime.fromtimestamp(x) for x in df['timestamp'].tolist()

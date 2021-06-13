@@ -15,6 +15,8 @@ load_dotenv()
 class Settings(BaseSettings):
     EXPERIMENTAL_CONDITION: str
     DATA_DIRECTORY: str
+    MEASUREMENT_LOCATION: str
+    SENSOR_TYPE: str
 
 
 settings = Settings()

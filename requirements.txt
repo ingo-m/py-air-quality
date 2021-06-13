@@ -7,3 +7,4 @@ uvicorn
 pyserial
 py-sds011
 python-dotenv
+pymongo

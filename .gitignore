@@ -87,3 +87,6 @@ ENV/
 
 # mac OS related stuff
 .DS_Store
+
+# Secrets file containing database credentials:
+.credentials
