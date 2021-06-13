@@ -1,14 +1,19 @@
 """
 Commit new measurement data to mongodb database.
+
+Can be run as a cron job:
+*/5 * * * * /home/pi/py_main/bin/python /home/pi/github/py-air-quality/py_air_quality/crud/read_csv_data.py >> /home/pi/air_quality/crontab_log_db.txt 2>&1
+
 """
 
 
 import os
 from datetime import datetime, timezone
+from time import sleep
 
-import numpy as np
-import pandas as pd
-from pymongo
+sleep(55)
+
+import pymongo
 
 from py_air_quality.crud.read_csv_data import read_csv_data
 from py_air_quality.internal.credentials import credentials
@@ -53,6 +58,8 @@ mongodb_tsl_cert = credentials.PATH_MONGODB_TSL_CERTIFICATE
 
 utc_now = datetime.now(timezone.utc)
 
+print('Commit new data to mongodb database at {}'.format(utc_now))
+
 # Read measurement data from csv file:
 df = read_csv_data(path_csv)
 
@@ -76,27 +83,40 @@ with pymongo.MongoClient(mongodb_url,
 
     search_results = db_collection.find_one(
         dict_search,
-        {'_id': False},
-        ).sort('timestamp', direction=pymongo.DESCENDING)
+        sort=[('timestamp', pymongo.DESCENDING)],
+        )
 
-    newest_db_timestamp = search_results.get('timestamp')
-    if not newest_db_timestamp:
+    if search_results:
+        newest_db_timestamp = search_results.get('timestamp')
+        if not newest_db_timestamp:
+            newest_db_timestamp = 0
+    else:
+        print('Found no previous data from same condition in database')
         newest_db_timestamp = 0
 
+    # Select new measurement that is not yet in database:
+    df = df.loc[df['timestamp'] > newest_db_timestamp]
 
+    if 0 < len(df):
 
+        print('Insert {} new datapoints into database'.format(len(df)))
 
+        # Select & annotate data to be committed to database:
+        df = df[['timestamp', 'pm25', 'pm10', 'datetime']]
+        df['experimental_condition'] = experimental_condition
+        df['measurement_location'] = measurement_location
+        df['sensor_type'] = sensor_type
+        df['record_time_utc'] = utc_now
 
-    df.dtypes
+        # Commit new measurement data to database:
+        df_list = df.to_dict(orient='records')
+        db_response = db_collection.insert_many(df_list)
 
+        if db_response.acknowledged:
+            print('Database insertion acknowledged.')
+        else:
+            print('ERROR: Database insertion failed.')
 
-    df = df[['timestamp', 'pm25', 'pm10', 'datetime']]
-    df['experimental_condition'] = experimental_condition
-    df['measurement_location'] = measurement_location
-    df['sensor_type'] = sensor_type
-    df['record_time_utc'] = utc_now
+    else:
 
-    df_list = df.to_dict(orient='records')
-
-    db_response = collection.insert_many(df_list)
-
+        print('No new data to be committed to database.')
