@@ -32,7 +32,7 @@ sensor_types = ['Nova Fitness SDS011']
 
 # Output path for plots (experimental condition and plot name left open; where
 # plot name will be filled in by the child plotting function, e.g. 'last_24h'):
-path_plot = '/home/john/Desktop/02/{}_{}.png'
+path_plot = '/home/pi/air_quality/db_plots/{}_{}.png'
 
 # When querying data for aggregate plots, include data from last x days:
 last_x_days = 365
@@ -56,7 +56,7 @@ mongodb_tsl_cert = credentials.PATH_MONGODB_TSL_CERTIFICATE
 
 # Wait for the measurement to finish (assuming that the measurement is done at
 # the same frequency, through cron tab).
-# sleep(60)
+sleep(70)
 
 # Get current UTC, and add time zone info (so it can be transformed to local
 # time).
