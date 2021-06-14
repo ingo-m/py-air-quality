@@ -30,9 +30,10 @@ measurement_locations = ['Berlin Kreuzberg']
 
 sensor_types = ['Nova Fitness SDS011']
 
-# Output path for plots (experimental condition and plot name left open; where
-# plot name will be filled in by the child plotting function, e.g. 'last_24h'):
-path_plot = '/home/pi/air_quality/db_plots/{}_{}.png'
+# Output path for plots ('indoors' / 'outdoors' directory, experimental
+# condition and plot name left open;  plot name will be filled in by the child
+# plotting function, e.g. 'last_24h'):
+path_plot = '/home/pi/gitlab/utilities/technical_notes/mkdocs/website_air_quality/site/{}/{}_{}.png'
 
 # When querying data for aggregate plots, include data from last x days:
 last_x_days = 365
@@ -136,7 +137,20 @@ with pymongo.MongoClient(mongodb_url,
 
                 # Fill in experimental condition into plot name, but leave name
                 # for time condition (e.g. 'last_24h') open.
-                path_tmp = path_plot.format(experimental_condition, '{}')
+                if experimental_condition == 'with_filter':
+                    path_tmp = path_plot.format(
+                        'indoors',
+                        experimental_condition,
+                        '{}'
+                        )
+                elif experimental_condition == 'outdoors_front':
+                    path_tmp = path_plot.format(
+                        'outdoors',
+                        experimental_condition,
+                        '{}'
+                        )
+                else:
+                    raise ValueError
 
                 # Create plots:
                 plot_pollution(df=df,
