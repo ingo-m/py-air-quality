@@ -4,8 +4,8 @@ Plot air polution measurement data from mongodb database.
 Requires database credentials to be set in
 py-air-quality/py_air_quality/internal/.credentials
 
-Can be run as a cron job:
-*/5 * * * * /home/pi/py_main/bin/python /home/pi/github/py-air-quality/py_air_quality/server/plot_pollution_from_db.py >> /home/pi/air_quality/crontab_log_plot.txt 2>&1
+Can be run as a cron job (e.g. on remote server):
+*/5 * * * * /home/john/py_main/bin/python /home/john/air_quality/py-air-quality/py_air_quality/server/plot_pollution_from_db.py >> /home/john/air_quality/crontab_log_plot.txt 2>&1
 
 """
 
@@ -33,7 +33,7 @@ sensor_types = ['Nova Fitness SDS011']
 # Output path for plots ('indoors' / 'outdoors' directory, experimental
 # condition and plot name left open;  plot name will be filled in by the child
 # plotting function, e.g. 'last_24h'):
-path_plot = '/home/pi/gitlab/utilities/technical_notes/mkdocs/website_air_quality/site/{}/{}_{}.png'
+path_plot = '/home/john/website/site/{}/{}_{}.png'
 
 # When querying data for aggregate plots, include data from last x days:
 last_x_days = 365
