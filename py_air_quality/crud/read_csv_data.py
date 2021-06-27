@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from dateutil import tz
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 def read_csv_data(path_csv):
@@ -20,15 +20,8 @@ def read_csv_data(path_csv):
     df = df.astype({'pm25': np.float64, 'pm10': np.float64})
 
     df['datetime'] = [
-        datetime.fromtimestamp(x) for x in df['timestamp'].tolist()
-        ]
-
-    # Convert time from UTC to local time zone:
-    from_zone = tz.tzutc()
-
-    # Tell the datetime object that it's in UTC time zone:
-    df['datetime'] = [
-        x.replace(tzinfo=from_zone) for x in df['datetime'].tolist()
+        datetime.fromtimestamp(x, tz=timezone.utc) for x in
+        df['timestamp'].tolist()
         ]
 
     # Convert datetime to local time:
