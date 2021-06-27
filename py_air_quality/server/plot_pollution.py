@@ -56,7 +56,7 @@ local_now_hour = (
 
 # Add column for most recent datapoints (True for all datapoints that were
 # measured within the last 24 hours):
-utc_now = datetime.utcnow()
+utc_now = datetime.now(timezone.utc)
 yesterday_epoch = int(round((utc_now - timedelta(hours=24.0)).timestamp()))
 df['last_24_h'] = np.greater_equal(df['timestamp'].values, yesterday_epoch)
 

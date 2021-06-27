@@ -13,7 +13,7 @@ from time import sleep
 
 import pandas as pd
 import pymongo
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from dateutil import tz
 
 from py_air_quality.internal.credentials import credentials
@@ -59,14 +59,12 @@ mongodb_tsl_cert = credentials.PATH_MONGODB_TSL_CERTIFICATE
 # the same frequency, through cron tab).
 sleep(70)
 
-# Get current UTC, and add time zone info (so it can be transformed to local
-# time).
-utc_zone = tz.tzutc()
-utc_now = datetime.utcnow()
+# Get current UTC with time zone info (so it can be transformed to local time).
+utc_now = datetime.now(timezone.utc)
 
 # Current, local time:
 local_time_zone = tz.gettz(local_time_zone_name)
-local_now = utc_now.replace(tzinfo=utc_zone).astimezone(local_time_zone)
+local_now = utc_now.astimezone(local_time_zone)
 
 local_now_hour = (
     float(local_now.hour)
@@ -114,17 +112,14 @@ with pymongo.MongoClient(mongodb_url,
                 df = df[['timestamp', 'pm25', 'pm10']]
 
                 df['datetime'] = [
-                    datetime.fromtimestamp(x) for x in df['timestamp'].tolist()
-                    ]
-
-                # Tell the datetime object that it's in UTC time zone:
-                df['datetime'] = [
-                    x.replace(tzinfo=utc_zone) for x in df['datetime'].tolist()
+                    datetime.fromtimestamp(x, tz=timezone.utc) for x in
+                    df['timestamp'].tolist()
                     ]
 
                 # Convert datetime to local time:
                 df['datetime'] = [
-                    x.astimezone(local_time_zone) for x in df['datetime'].tolist()
+                    x.astimezone(local_time_zone) for x in
+                    df['datetime'].tolist()
                     ]
 
                 # Add column for hour of the day:

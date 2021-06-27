@@ -6,7 +6,7 @@ Monitor air quality with SDS011 sensor.
 import os
 import csv
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sds011 import SDS011
 
@@ -46,7 +46,7 @@ try:
         _, _ = sensor.query()
         time.sleep(1)
 
-    utc_now = datetime.utcnow()
+    utc_now = datetime.now(timezone.utc)
 
     # Get measurement:
     pm25, pm10 = sensor.query()
@@ -55,7 +55,7 @@ try:
 
 except Exception:
 
-    utc_now = datetime.utcnow()
+    utc_now = datetime.now(timezone.utc)
     pm25 = None
     pm10 = None
 
