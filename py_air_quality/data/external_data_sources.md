@@ -22,3 +22,8 @@ downloaded from:
 https://aqicn.org/data-platform/covid19/
 Note that this data is averaged across measurement stations, with one value per
 city.
+
+# luftdaten.berlin.de
+
+Data from official measurement stations operated by the city of Berlin:
+https://luftdaten.berlin.de/station/overview/active
