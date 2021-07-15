@@ -152,7 +152,6 @@ colours = [
     [float(x) / 255.0 for x in [44, 178, 252, 255]],
     ]
 
-
 graph = sns.catplot(
     data=df_hourly,
     kind='bar',
@@ -165,7 +164,7 @@ graph = sns.catplot(
 
 # Axis layout:
 graph.axes[0][0].set_xlabel(None)
-graph.axes[0][0].set_ylabel('Air pollutiuon [a.u.]', fontsize=18)
+graph.axes[0][0].set_ylabel('Pollutant concentration [μg/m3]', fontsize=18)
 graph.axes[0][0].set_yticks([0.0, 5.0, 10.0, 15.0])
 graph.axes[0][0].set_xticklabels(['Outdoors', 'Indoors'])
 graph.axes[0][0].tick_params(labelsize=16)
@@ -186,16 +185,18 @@ graph.savefig(os.path.join(path_out, 'filter_bar_plot.png'),
                dpi=200.0,
                bbox_inches='tight',
                )
+figure = graph.fig
+figure.clf()
 
 
 # ------------------------------------------------------------------------------
-# *** Line plot
+# *** Plot pollution over time
 
+# Rolling average:
+df_hourly[pollutant] = df_hourly[pollutant].rolling(24, center=True).mean()
 
-# TODO
-
-df_hourly[pollutant] = df_hourly[pollutant].rolling(24, min_periods=1).mean()
-
+# Exclude nan:
+# df_hourly = df_hourly[df_hourly[pollutant].notna()]
 
 graph = sns.lineplot(
     x='datetime_hour',
@@ -206,6 +207,30 @@ graph = sns.lineplot(
     palette=colours,
     ci=None,
     )
+
+# Axis layout:
+graph.axes.set_xlabel(None)
+graph.set_xticks([
+    df_internal_hourly['datetime_hour'].iloc[0],
+    df_internal_hourly['datetime_hour'].iloc[
+        (round(len(df_internal_hourly) / 2))
+        ],
+    df_internal_hourly['datetime_hour'].iloc[-1],
+    ])
+graph.set_ylabel('Pollutant concentration [μg/m3]', fontsize=14)
+graph.set_yticks([0.0, 5.0, 10.0, 15.0, 20.0])
+graph.axes.tick_params(labelsize=14)
+graph.axes.spines['top'].set_visible(False)
+graph.axes.spines['right'].set_visible(False)
+
+graph.get_legend().remove()
+
+figure = graph.get_figure()
+figure.savefig(os.path.join(path_out, 'timeplot.png'),
+               dpi=200.0,
+               bbox_inches='tight',
+               )
+figure.clf()
 
 
 # ------------------------------------------------------------------------------
