@@ -19,7 +19,7 @@ import os
 
 import pandas as pd
 import seaborn as sns
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta
 
 from read_csv_data import read_csv_data
 
@@ -192,8 +192,17 @@ figure.clf()
 # ------------------------------------------------------------------------------
 # *** Plot pollution over time
 
-# Rolling average:
-df_hourly[pollutant] = df_hourly[pollutant].rolling(24, center=True).mean()
+# Calculate rolling average, separately for internal & external measurements
+# (otherwise the rolling average would spread form one condition into the
+# other).
+
+df_hourly.loc[df_hourly['source'] == 'internal', pollutant] = \
+    df_hourly.loc[df_hourly['source'] == 'internal', pollutant
+                  ].rolling(24, center=True).mean()
+
+df_hourly.loc[df_hourly['source'] == 'external', pollutant] = \
+    df_hourly.loc[df_hourly['source'] == 'external', pollutant
+                  ].rolling(24, center=True).mean()
 
 # Exclude nan:
 # df_hourly = df_hourly[df_hourly[pollutant].notna()]
