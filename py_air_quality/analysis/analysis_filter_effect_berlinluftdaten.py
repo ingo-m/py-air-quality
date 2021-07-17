@@ -234,7 +234,7 @@ graph.axes.spines['right'].set_visible(False)
 
 graph.get_legend().remove()
 
-graph.set_aspect(3.0)
+graph.set_aspect(2.7)
 
 figure = graph.get_figure()
 figure.savefig(os.path.join(path_out, 'timeplot.png'),
