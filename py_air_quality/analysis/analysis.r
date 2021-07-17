@@ -9,13 +9,13 @@ df <- read.csv(file='/home/john/PhD/GitHub/py-air-quality/py_air_quality/data/pr
 
 head(df)
 
-# model = lm(pm25_internal ~ filter + weekend + pm25_external,
+# model = lm(pm25_internal ~ filter + pm25_external,
 #            data=df)
 # summary(model)
 
 # form=(~1|timestamp)
 
-model = gls(pm25_internal ~ filter + weekend + pm25_external,
+model = gls(pm25_internal ~ filter + pm25_external,
             data=df,
             correlation=corCAR1(form=(~timestamp)),
             verbose=TRUE)

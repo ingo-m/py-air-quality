@@ -16,6 +16,7 @@ Processed data is exported for further analysis in R.
 """
 
 import os
+from copy import deepcopy
 
 import pandas as pd
 import seaborn as sns
@@ -129,6 +130,9 @@ df_hourly = pd.merge_asof(
     on='timestamp',
     direction='nearest',
     )
+
+# We need to retain a version in wide format (to export for analysis in R):
+df_hourly_wide = deepcopy(df_hourly)
 
 # Wide to long format:
 
@@ -247,24 +251,13 @@ figure.clf()
 # ------------------------------------------------------------------------------
 # *** Merge data from external & internal data source
 
-df_internal = df_internal.sort_values('timestamp')
-df_external = df_external.sort_values('timestamp')
-
-# Merge data from external & internal data source on epoch timestamp, using the
-# nearest available datapoint from external measurement (which has lower
-# temporal resolution).
-df = pd.merge_asof(
-    df_internal,
-    df_external,
-    on='timestamp',
-    direction='nearest',
-    )
+df_hourly_wide = df_hourly_wide.sort_values('timestamp')
 
 # Exclude nan:
-df = df[df['pm25_internal'].notna()]
-df = df[df['pm25_external'].notna()]
+df_hourly_wide = df_hourly_wide[df_hourly_wide['pm25_internal'].notna()]
+df_hourly_wide = df_hourly_wide[df_hourly_wide['pm25_external'].notna()]
 
-df.to_csv(
+df_hourly_wide.to_csv(
     os.path.join(path_out, 'preprocessed.csv'),
     sep=';',
     index=False,
