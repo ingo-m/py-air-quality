@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-WORK IN PROGRESS
+Plot & export air quality data.
 
-Test for the effect of an air purifier (filter) on indoor air quality.
+Create plots to inspect effect of air filter on indoor air quality & export data
+for further analysis in R.
 
 To assess the effect of the filter, we combine data from external & internal
 sources for analysis. The external data are hourly measurements from an outdoor
@@ -22,7 +23,7 @@ import pandas as pd
 import seaborn as sns
 from datetime import datetime, timedelta
 
-from read_csv_data import read_csv_data
+from py_air_quality.crud.read_csv_data import read_csv_data
 
 
 # ------------------------------------------------------------------------------
@@ -153,7 +154,7 @@ df_hourly = pd.concat([df_tmp_ext, df_tmp_int], axis=0, ignore_index=True)
 
 colours = [
     [float(x) / 255.0 for x in [255, 0, 102, 255]],
-    [float(x) / 255.0 for x in [44, 178, 252, 255]],
+    [float(x) / 255.0 for x in [68, 138, 255, 255]],
     ]
 
 graph = sns.catplot(
@@ -215,11 +216,33 @@ graph = sns.lineplot(
     x='datetime_hour',
     y=pollutant,
     hue='source',
-    style='filter',
+    # style='filter',
     data=df_hourly,
     palette=colours,
     ci=None,
     )
+
+# We would like to plot a vertical line at the time point when condition changed
+# from no filter to filter. Get the datetime of the condition changes.
+condition_changes = []
+for idx in df_hourly.loc[df_hourly['source'] == 'internal'].index:
+    try:
+        filter_t = df_hourly.iloc[idx]['filter']
+        filter_t_plus_one = df_hourly.iloc[(idx + 1)]['filter']
+        if filter_t != filter_t_plus_one:
+            condition_changes.append(df_hourly.iloc[(idx + 1)]['datetime_hour'])
+
+    except IndexError:
+        break
+
+for condition_change in condition_changes:
+    graph.axvline(x=condition_change,
+                  ymin=0,
+                  ymax=1,
+                  color=[0.0, 0.0, 0.0, 0.6],
+                  linewidth=2.75,
+                  linestyle=':',
+                  )
 
 # Axis layout:
 graph.axes.set_xlabel(None)
@@ -236,20 +259,30 @@ graph.axes.tick_params(labelsize=14)
 graph.axes.spines['top'].set_visible(False)
 graph.axes.spines['right'].set_visible(False)
 
-graph.get_legend().remove()
+# Adjust legend:
+legend = graph.get_legend()
+legend.set_title(None)
+legend.set_frame_on(False)
+for i in range(2):
+    legend_text = legend.texts[i].get_text()
+    if legend_text == 'internal':
+        legend.texts[i].set_text('Outdoors')
+    elif legend_text == 'external':
+        legend.texts[i].set_text('Indoors')
+    legend.texts[i].set_fontsize(14)
 
 graph.set_aspect(2.7)
 
 figure = graph.get_figure()
 figure.savefig(os.path.join(path_out, 'timeplot.png'),
-               dpi=200.0,
+               dpi=240.0,
                bbox_inches='tight',
                )
 figure.clf()
 
 
 # ------------------------------------------------------------------------------
-# *** Merge data from external & internal data source
+# *** Export data for analysis in R
 
 df_hourly_wide = df_hourly_wide.sort_values('timestamp')
 
