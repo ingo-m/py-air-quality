@@ -266,9 +266,9 @@ legend.set_frame_on(False)
 for i in range(2):
     legend_text = legend.texts[i].get_text()
     if legend_text == 'internal':
-        legend.texts[i].set_text('Outdoors')
-    elif legend_text == 'external':
         legend.texts[i].set_text('Indoors')
+    elif legend_text == 'external':
+        legend.texts[i].set_text('Outdoors')
     legend.texts[i].set_fontsize(14)
 
 graph.set_aspect(2.7)
