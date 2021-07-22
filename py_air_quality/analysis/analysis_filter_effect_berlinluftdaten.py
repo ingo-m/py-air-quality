@@ -178,10 +178,10 @@ graph.axes[0][0].tick_params(labelsize=16)
 graph.legend.set_title('Filter', prop={'size': 16})
 for i in range(2):
     legend_text = graph.legend.texts[i].get_text()
-    if legend_text == '0.0':
+    if legend_text == 'False':
         graph.legend.texts[i].set_text('Off')
         graph.legend.texts[i].set_fontsize(16)
-    elif legend_text == '1.0':
+    elif legend_text == 'True':
         graph.legend.texts[i].set_text('On')
         graph.legend.texts[i].set_fontsize(16)
 

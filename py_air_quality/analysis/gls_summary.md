@@ -40,3 +40,12 @@ Standardized residuals:
 Residual standard error: 1.057825 
 Degrees of freedom: 2126 total; 2123 residual
 ```
+
+Rounded:
+```
+Coefficients:
+                Value   Std.Error   t-value   p-value
+(Intercept)     1.584      0.0753    21.036         0
+filterTrue     -1.458      0.0636   -22.929         0
+pm25_external   0.126      0.0047    26.790         0
+```
