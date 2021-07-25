@@ -93,7 +93,7 @@ dict_plot = {'last_24_h': df_last_24_h,
              }
 
 colours = [
-    [float(x) / 255.0 for x in [44, 178, 252, 255]],
+    [float(x) / 255.0 for x in [68, 138, 255, 255]],
     [float(x) / 255.0 for x in [255, 0, 102, 255]],
     ]
 
