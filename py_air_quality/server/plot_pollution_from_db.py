@@ -30,10 +30,10 @@ measurement_locations = ['Berlin Kreuzberg']
 
 sensor_types = ['Nova Fitness SDS011']
 
-# Output path for plots ('indoors' / 'outdoors' directory, experimental
-# condition and plot name left open;  plot name will be filled in by the child
-# plotting function, e.g. 'last_24h'):
-path_plot = '/home/john/website/site/{}/{}_{}.png'
+# Output path for plots (measurement location, experimental condition and plot
+# name left open;  plot name will be filled in by the child plotting function,
+# e.g. 'last_24h'):
+path_plot = '/home/john/website/site/air_quality_live_data/{}_{}_{}.png'
 
 # When querying data for aggregate plots, include data from last x days:
 last_x_days = 365
@@ -130,22 +130,14 @@ with pymongo.MongoClient(mongodb_url,
                 # Add column for weekend (binary; 0 = weekday, 1 = weekend):
                 df['weekend'] = [(5 <= x) for x in df['weekday'].tolist()]
 
-                # Fill in experimental condition into plot name, but leave name
-                # for time condition (e.g. 'last_24h') open.
-                if experimental_condition == 'with_filter':
-                    path_tmp = path_plot.format(
-                        'indoors',
-                        experimental_condition,
-                        '{}'
-                        )
-                elif experimental_condition == 'outdoors_front':
-                    path_tmp = path_plot.format(
-                        'outdoors',
-                        experimental_condition,
-                        '{}'
-                        )
-                else:
-                    raise ValueError
+                # Fill in measurement location and experimental condition into
+                # plot name, but leave name for time condition (e.g. 'last_24h')
+                # open.
+                path_tmp = path_plot.format(
+                    measurement_location.replace(' ', '_').lower(),
+                    experimental_condition,
+                    '{}'
+                    )
 
                 # Create plots:
                 plot_pollution(df=df,
