@@ -1,6 +1,37 @@
 """
 Continuously monitor air quality with SDS011 sensor, e.g. for mobile
 measurements.
+
+Create a service unit file:
+```
+sudo nano /etc/systemd/system/py_air_quality.service
+```
+
+Place the following configuration in the new service unit file:
+```
+[Unit]
+Description=Python Air Quality Monitor
+After=multi-user.target
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/home/pi/py_main/bin/python /home/pi/github/py-air-quality/py_air_quality/measurement/measurement_continuous.py
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Enable the service, so that it will be started when the system boots:
+```
+sudo systemctl daemon-reload
+sudo systemctl enable py_air_quality.service
+sudo systemctl start py_air_quality.service
+```
+
+Sources:
+https://alexandra-zaharia.github.io/posts/stopping-python-systemd-service-cleanly/
+https://medium.com/codex/setup-a-python-script-as-a-service-through-systemctl-systemd-f0cc55a42267
 """
 
 
