@@ -29,9 +29,10 @@ sudo systemctl enable py_air_quality.service
 sudo systemctl start py_air_quality.service
 ```
 
-Check the system log:
+Check the status & system log:
 ```
-journalctl -u my-py_air_quality.service
+sudo systemctl status py_air_quality.service
+journalctl -u py_air_quality.service
 ```
 
 Sources:
