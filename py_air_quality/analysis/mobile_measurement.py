@@ -13,9 +13,12 @@ from datetime import datetime, timezone
 
 import numpy as np
 import pandas as pd
+import seaborn as sns
 import tilemapbase
 import matplotlib.pyplot as plt
-from matplotlib import colors
+from matplotlib import colorbar
+from matplotlib.cm import ScalarMappable
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 from py_air_quality.crud.read_csv_data import read_csv_data
 
@@ -156,25 +159,41 @@ for x, y in zip(df['longitude'].to_list(), df['latitude'].to_list()):
     x_coordinates.append(x_norm)
     y_coordinates.append(y_norm)
 
-# Normalise colour range.
-color_norm = colors.Normalize(
-    vmin=0.0,
-    vmax=np.ceil(df[pollutant].max()),
-    clip=False,
-    )
+colour_map = sns.color_palette('plasma', as_cmap=True)
 
-ax.scatter(
+# Minimum and maximum of colour map.
+vmin = 0.0
+vmax = np.ceil(df[pollutant].max())
+
+# Plot air pollution on map.
+scatter = ax.scatter(
     x_coordinates,
     y_coordinates,
+    s=125.0,
     c=df[pollutant].to_list(),
     marker='.',
-    cmap='plasma',
-    vmin=0.0,
-    vmax=np.ceil(df[pollutant].max()),
-    #norm=color_norm,
-    # linewidth=20,
+    cmap=colour_map,
+    vmin=vmin,
+    vmax=vmax,
+    linewidth=0,
     zorder=2,
-    edgecolor=None,
+    edgecolor='none',
     alpha=0.5,
     )
 
+# Colour space for colour bar.
+norm = plt.Normalize(vmin, vmax)
+sm = ScalarMappable(norm=norm, cmap=colour_map)
+sm.set_array([])
+
+# Create additional axes for colour bar, next to existing plot.
+divider = make_axes_locatable(ax)
+colorbar_axes = divider.append_axes(
+    'right',
+    size='5%',
+    pad=0.2,
+    )
+
+# Create colour bar.
+cbar = fig.colorbar(sm, cax=colorbar_axes)  # ax=ax)
+cbar.ax.set_title(pollutant)
