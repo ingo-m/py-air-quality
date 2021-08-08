@@ -30,13 +30,15 @@ from py_air_quality.crud.read_csv_data import read_csv_data
 path_air_data = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_data/measurement_mobile.csv'
 
 # Path of csv file with GPS coordinates, from "GPS Logger" App.
-path_gps = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_data/20210808-125802-Wanderung_Irmenseule_1.txt'
+path_gps = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_data/20210807-212329-Alfeld-Duingen-artifact-removed.txt'
 
 # Output file path for plot:
-path_plot = '/home/john/Desktop/plot.png'
+path_plot = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_plots/alfeld_duingen.png'
 
 # Which pollutant to plot ('pm25' or 'pm10').
 pollutant = 'pm25'
+
+figure_size = (16, 16)
 
 # -----------------------------------------------------------------------------
 # *** Load air quality data
@@ -142,7 +144,7 @@ extent = tilemapbase.Extent.from_lonlat(
         )
 # extent = extent.to_aspect(1.0)
 
-fig, ax = plt.subplots(figsize=(8, 8), dpi=100)
+fig, ax = plt.subplots(figsize=figure_size)
 ax.xaxis.set_visible(False)
 ax.yaxis.set_visible(False)
 
@@ -169,7 +171,7 @@ vmax = np.ceil(df[pollutant].max())
 scatter = ax.scatter(
     x_coordinates,
     y_coordinates,
-    s=125.0,
+    s=150.0,
     c=df[pollutant].to_list(),
     marker='.',
     cmap=colour_map,
@@ -206,5 +208,6 @@ ax.spines['right'].set_visible(False)
 
 fig.savefig(
     path_plot,
+    dpi=128,
     bbox_inches='tight',
     )
