@@ -2,10 +2,10 @@
 """
 Analyse mobile air quality measurement.
 
-Process air pollution data and corresponding GPS location data (from "GPS 
+Process air pollution data and corresponding GPS location data (from "GPS
 Logger" Android App), and plot data on a map from openstreetmap.org.
 
-pip install tilemapbase                                                                
+pip install tilemapbase
 
 """
 
@@ -15,6 +15,7 @@ import numpy as np
 import pandas as pd
 import tilemapbase
 import matplotlib.pyplot as plt
+from matplotlib import colors
 
 from py_air_quality.crud.read_csv_data import read_csv_data
 
@@ -90,6 +91,8 @@ timestamp_air = [float(x) for x in df['timestamp_air'].to_list()]
 time_diff = np.absolute(np.subtract(timestamp_gps, timestamp_air))
 time_diff_bool = np.less(time_diff, time_diff_thr)
 
+df = df.loc[time_diff_bool]
+
 n_valid = np.sum(time_diff_bool)
 
 msg = 'Including {} valid datapoints'.format(n_valid)
@@ -100,31 +103,39 @@ msg = ('Excluding {} invalid datapoints (no air pollution datapoints matching'
 msg = msg.format((len(time_diff_bool) - n_valid))
 print(msg)
 
+# -----------------------------------------------------------------------------
+# *** Plot data
 
+print('Plot data')
 
+# Get the minimum and maximum latitude and longitude. Add a margin for
+# visualisation purposes.
+lat_min = df['latitude'].min()
+lat_max = df['latitude'].max()
+long_min = df['longitude'].min()
+long_max = df['longitude'].max()
 
+plot_margin = 0.075 * max((long_max - long_min), (lat_max - lat_min))
 
+long_min = long_min - plot_margin
+long_max = long_max + plot_margin
+lat_min = lat_min - plot_margin
+lat_max = lat_max + plot_margin
 
+#long_min = 51.9265
+#long_max = 52.0050
+#lat_min = 9.8084
+#lat_max = 10.0209
 
-
-df_gps.dtypes
-
-
-long_min = 51.9265
-long_max = 52.0050
-lat_min = 9.8084
-lat_max = 10.0209
-
+# Get map from open street maps:
 tilemapbase.start_logging()
 tilemapbase.init(create=True)
-t = tilemapbase.tiles.build_OSM()
-
-#degree_range = 0.003
+tiles = tilemapbase.tiles.build_OSM()
 extent = tilemapbase.Extent.from_lonlat(
-        lat_min, 
-        lat_max,                  
-        long_min, 
-        long_max
+        long_min,
+        long_max,
+        lat_min,
+        lat_max,
         )
 # extent = extent.to_aspect(1.0)
 
@@ -132,9 +143,38 @@ fig, ax = plt.subplots(figsize=(8, 8), dpi=100)
 ax.xaxis.set_visible(False)
 ax.yaxis.set_visible(False)
 
-plotter = tilemapbase.Plotter(extent, t, width=600)
-plotter.plot(ax, t)
+plotter = tilemapbase.Plotter(extent, tiles, width=600)
+plotter.plot(ax, tiles)
 
-x, y = tilemapbase.project(*my_office)
-ax.scatter(x,y, marker=".", color="black", linewidth=20)
+# Convert GPS coordinates to "Web Mercator" projection, normalised between 0
+# and 1.
+x_coordinates = []
+y_coordinates = []
+
+for x, y in zip(df['longitude'].to_list(), df['latitude'].to_list()):
+    x_norm, y_norm = tilemapbase.project(x, y)
+    x_coordinates.append(x_norm)
+    y_coordinates.append(y_norm)
+
+# Normalise colour range.
+color_norm = colors.Normalize(
+    vmin=0.0,
+    vmax=np.ceil(df[pollutant].max()),
+    clip=False,
+    )
+
+ax.scatter(
+    x_coordinates,
+    y_coordinates,
+    c=df[pollutant].to_list(),
+    marker='.',
+    cmap='plasma',
+    vmin=0.0,
+    vmax=np.ceil(df[pollutant].max()),
+    #norm=color_norm,
+    # linewidth=20,
+    zorder=2,
+    edgecolor=None,
+    alpha=0.5,
+    )
 
