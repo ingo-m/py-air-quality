@@ -11,6 +11,7 @@ pip install tilemapbase
 
 from datetime import datetime, timezone
 
+import numpy as np
 import pandas as pd
 import tilemapbase
 import matplotlib.pyplot as plt
@@ -36,11 +37,18 @@ pollutant = 'pm25'
 # -----------------------------------------------------------------------------
 # *** Load air quality data
 
+print('Analyse mobile air quality measurement')
+
+print('Load air quality data')
+
 df_air = read_csv_data(path_air_data)
 df_air = df_air[['timestamp', pollutant]]
+df_air = df_air.rename(columns={'timestamp':'timestamp_air'})
 
 # -----------------------------------------------------------------------------
 # *** Load GPS data
+
+print('Load GPS data')
 
 df_gps = pd.read_csv(path_gps)
 
@@ -53,12 +61,48 @@ datetime = [datetime.strptime(x, '%Y-%m-%d %H:%M:%S').replace(tzinfo=utc_zone)
 
 timestamp = [round(x.timestamp()) for x in datetime]
 
-df_gps['timestamp'] = timestamp
+df_gps['timestamp_gps'] = timestamp
 
-df_gps = df_gps[['timestamp', 'latitude', 'longitude']]
+df_gps = df_gps[['timestamp_gps', 'latitude', 'longitude']]
 
 # -----------------------------------------------------------------------------
 # *** Merge pollution & GPS data
+
+print('Merge pollution & GPS data')
+
+# Data must be sorted before merge.
+df_air = df_air.sort_values('timestamp_air')
+df_gps = df_gps.sort_values('timestamp_gps')
+
+df = pd.merge_asof(
+    df_gps,
+    df_air,
+    left_on='timestamp_gps',
+    right_on='timestamp_air',
+    direction='nearest',
+    )
+
+# Remove datapoints where the timestamps of the particulate concentration and
+# the GPS measurements are above some threshold.
+time_diff_thr = 10.0
+timestamp_gps = [float(x) for x in df['timestamp_gps'].to_list()]
+timestamp_air = [float(x) for x in df['timestamp_air'].to_list()]
+time_diff = np.absolute(np.subtract(timestamp_gps, timestamp_air))
+time_diff_bool = np.less(time_diff, time_diff_thr)
+
+n_valid = np.sum(time_diff_bool)
+
+msg = 'Including {} valid datapoints'.format(n_valid)
+print(msg)
+
+msg = ('Excluding {} invalid datapoints (no air pollution datapoints matching'
+       + ' GPS timestamp).')
+msg = msg.format((len(time_diff_bool) - n_valid))
+print(msg)
+
+
+
+
 
 
 
