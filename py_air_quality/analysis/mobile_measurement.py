@@ -187,13 +187,24 @@ sm = ScalarMappable(norm=norm, cmap=colour_map)
 sm.set_array([])
 
 # Create additional axes for colour bar, next to existing plot.
-divider = make_axes_locatable(ax)
-colorbar_axes = divider.append_axes(
-    'right',
-    size='5%',
-    pad=0.2,
-    )
+# divider = make_axes_locatable(ax)
+# colorbar_axes = divider.append_axes(
+#     'right',
+#     size='5%',
+#     pad=0.2,
+#     )
 
 # Create colour bar.
-cbar = fig.colorbar(sm, cax=colorbar_axes)  # ax=ax)
+# cbar = fig.colorbar(sm, cax=colorbar_axes, shrink=0.5)
+cbar = fig.colorbar(sm, ax=ax, shrink=0.5)
 cbar.ax.set_title(pollutant)
+
+ax.spines['top'].set_visible(False)
+ax.spines['bottom'].set_visible(False)
+ax.spines['left'].set_visible(False)
+ax.spines['right'].set_visible(False)
+
+fig.savefig(
+    path_plot,
+    bbox_inches='tight',
+    )
