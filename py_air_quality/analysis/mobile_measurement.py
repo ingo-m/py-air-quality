@@ -33,7 +33,7 @@ path_air_data = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_data/meas
 path_gps = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_data/20210807-212329-Alfeld-Duingen-artifact-removed.txt'
 
 # Output file path for plot:
-path_plot = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_plots/alfeld_duingen.png'
+path_plot = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_plots/alfeld_duingen_pm25.png'
 
 # Which pollutant to plot ('pm25' or 'pm10').
 pollutant = 'pm25'
