@@ -14,6 +14,7 @@ Description=Python Air Quality Monitor
 After=multi-user.target
 
 [Service]
+User=pi
 Type=simple
 Restart=always
 ExecStart=/home/pi/py_main/bin/python /home/pi/github/py-air-quality/py_air_quality/measurement/measurement_continuous.py
