@@ -36,6 +36,11 @@ sudo systemctl status py_air_quality.service
 journalctl -u py_air_quality.service
 ```
 
+Manually stop the service when done with a measurement:
+```
+sudo systemctl stop py_air_quality.service
+```
+
 Sources:
 https://alexandra-zaharia.github.io/posts/stopping-python-systemd-service-cleanly/
 https://medium.com/codex/setup-a-python-script-as-a-service-through-systemctl-systemd-f0cc55a42267
