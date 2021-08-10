@@ -16,9 +16,9 @@ import pandas as pd
 import seaborn as sns
 import tilemapbase
 import matplotlib.pyplot as plt
-from matplotlib import colorbar
+# from matplotlib import colorbar
 from matplotlib.cm import ScalarMappable
-from mpl_toolkits.axes_grid1 import make_axes_locatable
+# from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 from py_air_quality.crud.read_csv_data import read_csv_data
 
@@ -27,16 +27,16 @@ from py_air_quality.crud.read_csv_data import read_csv_data
 
 # Path of csv file with Nova Fitness SDS011 particulate sensor data, measured
 # with py-air-quality.
-path_air_data = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_data/measurement_mobile.csv'
+path_air_data = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_data/measurement_mobile_2021-08-10_Fahrradtour_Hoersum_Irmenseul.csv'
 
 # Path of csv file with GPS coordinates, from "GPS Logger" App.
-path_gps = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_data/20210807-212329-Alfeld-Duingen-artifact-removed.txt'
+path_gps = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_data/20210810-133638-Fahrraftour_Wald_Kombiniert_artifact_removed.txt'
 
 # Output file path for plot:
-path_plot = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_plots/alfeld_duingen_pm25.png'
+path_plot = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_plots/Fahrradtour_Hoersum_Irmenseul_pm10.png'
 
 # Which pollutant to plot ('pm25' or 'pm10').
-pollutant = 'pm25'
+pollutant = 'pm10'
 
 figure_size = (16, 16)
 
