@@ -27,16 +27,16 @@ from py_air_quality.crud.read_csv_data import read_csv_data
 
 # Path of csv file with Nova Fitness SDS011 particulate sensor data, measured
 # with py-air-quality.
-path_air_data = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_data/measurement_mobile_2021-08-10_Fahrradtour_Hoersum_Irmenseul.csv'
+path_air_data = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_data/measurement_mobile_2021-08-08_Alfeld_Duingen_Irmenseul.csv'
 
 # Path of csv file with GPS coordinates, from "GPS Logger" App.
-path_gps = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_data/20210810-133638-Fahrraftour_Wald_Kombiniert_artifact_removed.txt'
+path_gps = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_data/20210808-124106-Wanderung_Irmenseule_Kombiniert.txt'
 
 # Output file path for plot:
-path_plot = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_plots/Fahrradtour_Hoersum_Irmenseul_pm10.png'
+path_plot = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_plots/Wanderung_Irmenseule_pm25_YlOrRd.png'
 
 # Which pollutant to plot ('pm25' or 'pm10').
-pollutant = 'pm10'
+pollutant = 'pm25'
 
 figure_size = (16, 16)
 
@@ -49,7 +49,7 @@ print('Load air quality data')
 
 df_air = read_csv_data(path_air_data)
 df_air = df_air[['timestamp', pollutant]]
-df_air = df_air.rename(columns={'timestamp':'timestamp_air'})
+df_air = df_air.rename(columns={'timestamp': 'timestamp_air'})
 
 # -----------------------------------------------------------------------------
 # *** Load GPS data
@@ -127,11 +127,6 @@ long_max = long_max + plot_margin
 lat_min = lat_min - plot_margin
 lat_max = lat_max + plot_margin
 
-#long_min = 51.9265
-#long_max = 52.0050
-#lat_min = 9.8084
-#lat_max = 10.0209
-
 # Get map from open street maps:
 tilemapbase.start_logging()
 tilemapbase.init(create=True)
@@ -161,7 +156,7 @@ for x, y in zip(df['longitude'].to_list(), df['latitude'].to_list()):
     x_coordinates.append(x_norm)
     y_coordinates.append(y_norm)
 
-colour_map = sns.color_palette('plasma', as_cmap=True)
+colour_map = sns.color_palette('YlOrRd', as_cmap=True)  # plasma_r YlOrRd
 
 # Minimum and maximum of colour map.
 vmin = 0.0
