@@ -27,13 +27,13 @@ from py_air_quality.crud.read_csv_data import read_csv_data
 
 # Path of csv file with Nova Fitness SDS011 particulate sensor data, measured
 # with py-air-quality.
-path_air_data = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_data/measurement_mobile_2021-08-08_Alfeld_Duingen_Irmenseul.csv'
+path_air_data = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_data/measurement_mobile_2021-08-11_Alfeld_Hannover.csv'
 
 # Path of csv file with GPS coordinates, from "GPS Logger" App.
-path_gps = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_data/20210808-124106-Wanderung_Irmenseule_Kombiniert.txt'
+path_gps = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_data/20210811-190107-Empelde_Spaziergang.txt'
 
 # Output file path for plot:
-path_plot = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_plots/Wanderung_Irmenseule_pm25_YlOrRd.png'
+path_plot = '/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_plots/20210811-190107-Empelde_Spaziergang_pm25.png'
 
 # Which pollutant to plot ('pm25' or 'pm10').
 pollutant = 'pm25'
@@ -156,7 +156,7 @@ for x, y in zip(df['longitude'].to_list(), df['latitude'].to_list()):
     x_coordinates.append(x_norm)
     y_coordinates.append(y_norm)
 
-colour_map = sns.color_palette('YlOrRd', as_cmap=True)  # plasma_r YlOrRd
+colour_map = sns.color_palette('plasma_r', as_cmap=True)  # plasma_r YlOrRd
 
 # Minimum and maximum of colour map.
 vmin = 0.0
@@ -175,7 +175,7 @@ scatter = ax.scatter(
     linewidth=0,
     zorder=2,
     edgecolor='none',
-    alpha=0.5,
+    alpha=1.0,
     )
 
 # Colour space for colour bar.
