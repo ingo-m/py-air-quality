@@ -115,7 +115,7 @@ def plot_pollution(*,
             # Adjust legend:
             graph.legend_.set_title(None)
             graph.legend_.set_frame_on(False)
-            for i in range(2):
+            for i in range(3):
                 legend_text = graph.legend_.texts[i].get_text()
                 if legend_text == 'pm25':
                     graph.legend_.texts[i].set_text(
@@ -127,6 +127,8 @@ def plot_pollution(*,
                         '$PM_{10}$ mean = '
                         + str(np.around(pm10_mean, decimals=1))
                         )
+                elif legend_text == 'type':
+                    graph.legend_.texts[i].set_text(None)
 
         except Exception:
 
