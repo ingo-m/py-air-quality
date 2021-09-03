@@ -10,18 +10,18 @@ Can be run as a cron job:
 """
 
 
-import os
-from datetime import datetime, timezone
 from time import sleep
 
 sleep(55)
+
+import os
+from datetime import datetime, timezone
 
 import pymongo
 
 from py_air_quality.crud.read_csv_data import read_csv_data
 from py_air_quality.internal.credentials import credentials
 from py_air_quality.internal.settings import settings
-
 
 
 # ------------------------------------------------------------------------------
@@ -63,9 +63,6 @@ utc_now = datetime.now(timezone.utc)
 
 print('Commit new data to mongodb database at {}'.format(utc_now))
 
-# Read measurement data from csv file:
-df = read_csv_data(path_csv)
-
 with pymongo.MongoClient(mongodb_url,
                          username=mongodb_username,
                          authMechanism='MONGODB-X509',
@@ -92,13 +89,14 @@ with pymongo.MongoClient(mongodb_url,
     if search_results:
         newest_db_timestamp = search_results.get('timestamp')
         if not newest_db_timestamp:
-            newest_db_timestamp = 0
+            newest_db_timestamp = None
     else:
         print('Found no previous data from same condition in database')
-        newest_db_timestamp = 0
+        newest_db_timestamp = None
 
-    # Select new measurement that is not yet in database:
-    df = df.loc[df['timestamp'] > newest_db_timestamp]
+    # Read measurement data from csv file, and select new measurements that are
+    # not yet in the database.
+    df = read_csv_data(path_csv, newest_db_timestamp=newest_db_timestamp)
 
     if 0 < len(df):
 

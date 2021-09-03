@@ -4,16 +4,18 @@ from dateutil import tz
 from datetime import datetime, timezone
 
 
-def read_csv_data(path_csv):
+def read_csv_data(path_csv, newest_db_timestamp=None):
     """
     Read & process measurement data from csv file.
-
     Load csv data created from `py_air_quality.measurement.measurement.py`, and
     transform date string to datetime object, and return dataframe.
-
     """
 
     df = pd.read_csv(path_csv)
+
+    if newest_db_timestamp:
+        # Select new measurements that are not yet in database:
+        df = df.loc[df['timestamp'] > newest_db_timestamp]
 
     df = df.replace(to_replace='None', value=np.nan)
 
