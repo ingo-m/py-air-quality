@@ -23,12 +23,22 @@ from py_air_quality.server.plot import plot_pollution
 # ------------------------------------------------------------------------------
 # *** Define parameters
 
-# Experimental condition, e.g. 'baseline' or 'with_filter':
-experimental_conditions = ['with_filter', 'outdoors_front']
-
-measurement_locations = ['Berlin Kreuzberg']
-
-sensor_types = ['Nova Fitness SDS011']
+# Combinations of experimental condition, e.g. 'baseline' or 'with_filter',
+# measurement locations, and sensor types.
+combinations = [
+    {'measurement_location': 'Berlin Kreuzberg',
+     'experimental_condition': 'with_filter',
+     'sensor_type': 'Nova Fitness SDS011',
+     },
+    {'measurement_location': 'Berlin Kreuzberg',
+     'experimental_condition': 'outdoors_front',
+     'sensor_type': 'Nova Fitness SDS011',
+     },
+    {'measurement_location': 'Alfeld',
+     'experimental_condition': 'outdoors_terrace',
+     'sensor_type': 'Nova Fitness SDS011',
+     },
+    ]
 
 # Output path for plots (measurement location, experimental condition and plot
 # name left open;  plot name will be filled in by the child plotting function,
@@ -84,63 +94,61 @@ with pymongo.MongoClient(mongodb_url,
 
     db_collection = db['air_quality']
 
-    for experimental_condition in experimental_conditions:
+    for combination in combinations:
 
-        for measurement_location in measurement_locations:
+        measurement_location = combination['measurement_location']
+        experimental_condition = combination['experimental_condition']
+        sensor_type = combination['sensor_type']
 
-            for sensor_type in sensor_types:
+        dict_search = {
+            'timestamp': {'$gt': start_epoch},
+            'experimental_condition': experimental_condition,
+            'measurement_location': measurement_location,
+            'sensor_type': sensor_type,
+            }
 
-                dict_search = {
-                    'timestamp': {'$gt': start_epoch},
-                    'experimental_condition': experimental_condition,
-                    'measurement_location': measurement_location,
-                    'sensor_type': sensor_type,
-                    }
+        search_results = db_collection.find(dict_search)
 
-                search_results = db_collection.find(dict_search)
+        # ----------------------------------------------------------------------
+        # *** Transform data
 
-                # --------------------------------------------------------------
-                # *** Transform data
+        data = [x for x in search_results]
 
-                data = [x for x in search_results]
+        df = pd.DataFrame(data)
 
-                df = pd.DataFrame(data)
+        # 'datetime' and 'timestamp' from database should match, but use epoch
+        # timestamp as single source of truth and apply time zone conversion.
+        df = df[['timestamp', 'pm25', 'pm10']]
 
-                # 'datetime' and 'timestamp' from database should match, but
-                # use epoch timestamp as single source of truth and apply time
-                # zone conversion.
-                df = df[['timestamp', 'pm25', 'pm10']]
+        df['datetime'] = [
+            datetime.fromtimestamp(x, tz=timezone.utc) for x in
+            df['timestamp'].tolist()
+            ]
 
-                df['datetime'] = [
-                    datetime.fromtimestamp(x, tz=timezone.utc) for x in
-                    df['timestamp'].tolist()
-                    ]
+        # Convert datetime to local time:
+        df['datetime'] = [
+            x.astimezone(local_time_zone) for x in
+            df['datetime'].tolist()
+            ]
 
-                # Convert datetime to local time:
-                df['datetime'] = [
-                    x.astimezone(local_time_zone) for x in
-                    df['datetime'].tolist()
-                    ]
+        # Add column for hour of the day:
 
-                # Add column for hour of the day:
+        # Add column for weekday (where Monday is 0 and Sunday is 6):
+        df['weekday'] = [x.weekday() for x in df['datetime'].tolist()]
 
-                # Add column for weekday (where Monday is 0 and Sunday is 6):
-                df['weekday'] = [x.weekday() for x in df['datetime'].tolist()]
+        # Add column for weekend (binary; 0 = weekday, 1 = weekend):
+        df['weekend'] = [(5 <= x) for x in df['weekday'].tolist()]
 
-                # Add column for weekend (binary; 0 = weekday, 1 = weekend):
-                df['weekend'] = [(5 <= x) for x in df['weekday'].tolist()]
+        # Fill in measurement location and experimental condition into plot
+        # name, but leave name for time condition (e.g. 'last_24h') open.
+        path_tmp = path_plot.format(
+            measurement_location.replace(' ', '_').lower(),
+            experimental_condition,
+            '{}'
+            )
 
-                # Fill in measurement location and experimental condition into
-                # plot name, but leave name for time condition (e.g. 'last_24h')
-                # open.
-                path_tmp = path_plot.format(
-                    measurement_location.replace(' ', '_').lower(),
-                    experimental_condition,
-                    '{}'
-                    )
-
-                # Create plots:
-                plot_pollution(df=df,
-                               utc_now=utc_now,
-                               local_now_hour=local_now_hour,
-                               path_plot=path_tmp)
+        # Create plots:
+        plot_pollution(df=df,
+                       utc_now=utc_now,
+                       local_now_hour=local_now_hour,
+                       path_plot=path_tmp)
