@@ -1,5 +1,11 @@
 """
 Monitor air quality with SDS011 sensor.
+
+If the sensor cannot be accessed due to a permission error, you can try to
+adjust permissions for the USB port:
+
+sudo chmod -R 777 /dev/ttyUSB0
+
 """
 
 
