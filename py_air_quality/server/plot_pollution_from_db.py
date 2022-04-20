@@ -26,7 +26,7 @@ from py_air_quality.server.plot import plot_pollution
 combinations = [
     {
         "measurement_location": "Berlin Kreuzberg",
-        "experimental_condition": "with_filter",  # 'holiday_without_filter',
+        "experimental_condition": "holiday_without_filter",  # "with_filter",
         "sensor_type": "Nova Fitness SDS011",
     },
     {
@@ -34,17 +34,17 @@ combinations = [
         "experimental_condition": "outdoors_front",
         "sensor_type": "Nova Fitness SDS011",
     },
-    {
-        "measurement_location": "Alfeld",
-        "experimental_condition": "outdoors_terrace",
-        "sensor_type": "Nova Fitness SDS011",
-    },
-    {
-        "measurement_location": "Alfeld Wohnzimmer",
-        "experimental_condition": "baseline",
-        "sensor_type": "Nova Fitness SDS011",
-    },
 ]
+#    {
+#        "measurement_location": "Alfeld",
+#        "experimental_condition": "outdoors_terrace",
+#        "sensor_type": "Nova Fitness SDS011",
+#    },
+#    {
+#        "measurement_location": "Alfeld Wohnzimmer",
+#        "experimental_condition": "baseline",
+#        "sensor_type": "Nova Fitness SDS011",
+#    },
 
 # Output path for plots (measurement location, experimental condition and plot
 # name left open;  plot name will be filled in by the child plotting function,
