@@ -26,7 +26,7 @@ from py_air_quality.server.plot import plot_pollution
 combinations = [
     {
         "measurement_location": "Berlin Kreuzberg",
-        "experimental_condition": "holiday_without_filter",  # "with_filter",
+        "experimental_condition": "with_filter",  # "holiday_without_filter",
         "sensor_type": "Nova Fitness SDS011",
     },
     {
