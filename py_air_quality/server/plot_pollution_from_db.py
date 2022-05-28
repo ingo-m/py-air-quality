@@ -52,7 +52,7 @@ combinations = [
 path_plot = "/home/john/website/site/air_quality_live_data/{}_{}_{}.png"
 
 # When querying data for aggregate plots, include data from last x days:
-last_x_days = 365
+last_x_days = 30
 
 # Time zone used for plots:
 local_time_zone_name = "Europe/Berlin"
