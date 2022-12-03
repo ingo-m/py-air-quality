@@ -29,13 +29,15 @@ from py_air_quality.crud.read_csv_data import read_csv_data
 
 # Path of csv file with Nova Fitness SDS011 particulate sensor data, measured
 # with py-air-quality.
-path_air_data = "/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_data/measurement_mobile_2021-11-14_Berlin.csv"
+path_air_data = (
+    "/Users/ingo.marquardt/Documents/py-air-quality/20221203_measurement_mobile.csv"
+)
 
 # Path of csv file with GPS coordinates, from "GPS Logger" App.
-path_gps = "/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_data/20211114-172643-Kreuzberg.txt"
+path_gps = "/Users/ingo.marquardt/Documents/py-air-quality/20221203-155959_Winzenburg_Alfeld.txt"
 
 # Output file path for plot:
-path_plot = "/media/ssd_dropbox/Dropbox/Raspberry_Pi/air_pollution_plots/20211114-172643-Kreuzberg_pm25.png"
+path_plot = "/Users/ingo.marquardt/Documents/py-air-quality/20221203-155959_Winzenburg_Alfeld_pm25.png"
 
 # Which pollutant to plot ('pm25' or 'pm10').
 pollutant = "pm25"
@@ -63,14 +65,23 @@ df_gps = pd.read_csv(path_gps)
 # We assume that the datetime of the GPS data is in UTC.
 utc_zone = timezone.utc
 
-datetime = [
-    datetime.strptime(x, "%Y-%m-%d %H:%M:%S").replace(tzinfo=utc_zone)
-    for x in df_gps["date time"].to_list()
-]
+# Some rows have milliseconds, some don't.
+timestamps = []
+for datetime_str in df_gps["date time"].to_list():
+    datetime_obj = None
+    try:
+        timetime_obj = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S").replace(
+            tzinfo=utc_zone
+        )
+    except ValueError:
+        timetime_obj = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S.%f").replace(
+            tzinfo=utc_zone
+        )
+    timestamps.append(timetime_obj)
 
-timestamp = [round(x.timestamp()) for x in datetime]
+timestamps = [round(x.timestamp()) for x in timestamps]
 
-df_gps["timestamp_gps"] = timestamp
+df_gps["timestamp_gps"] = timestamps
 
 df_gps = df_gps[["timestamp_gps", "latitude", "longitude"]]
 
