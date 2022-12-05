@@ -30,15 +30,15 @@ from py_air_quality.crud.read_csv_data import read_csv_data
 # Path of csv file with Nova Fitness SDS011 particulate sensor data, measured
 # with py-air-quality.
 path_air_data = (
-    "/Users/ingo.marquardt/Documents/py-air-quality/20221204_measurement_mobile.csv"
+    "/Users/ingo.marquardt/Documents/py-air-quality/20221205_measurement_mobile.csv"
 )
 
 # Path of csv file with GPS coordinates, from "GPS Logger" App.
-path_gps = "/Users/ingo.marquardt/Documents/py-air-quality/20221204-160356_Alfeld.txt"
+path_gps = "/Users/ingo.marquardt/Documents/py-air-quality/20221205-133225_Alfeld.txt"
 
 # Output file path for plot:
 path_plot = (
-    "/Users/ingo.marquardt/Documents/py-air-quality/20221204-160356_Alfeld_pm25.png"
+    "/Users/ingo.marquardt/Documents/py-air-quality/20221205-133225_Alfeld_pm25.png"
 )
 
 # Which pollutant to plot ('pm25' or 'pm10').
@@ -177,8 +177,8 @@ for x, y in zip(df["longitude"].to_list(), df["latitude"].to_list()):
 colour_map = sns.color_palette("plasma_r", as_cmap=True)  # plasma_r YlOrRd
 
 # Minimum and maximum of colour map.
-# vmin = np.floor(df[pollutant].min())  # Data-dependent colour scale minimum
-vmin = 0.0  # Colour scale minimum = 0
+vmin = np.floor(df[pollutant].min())  # Data-dependent colour scale minimum
+# vmin = 0.0  # Colour scale minimum = 0
 vmax = np.ceil(df[pollutant].max())
 
 # Plot air pollution on map.
