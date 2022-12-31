@@ -26,7 +26,7 @@ def plot_pollution(*,
     hour = [float(x.hour) for x in df['datetime'].tolist()]
     minute = [float(x.minute) for x in df['datetime'].tolist()]
     daytime = np.add(hour, np.divide(minute, 60.0))
-    daytime = np.around(daytime, decimals=1)
+    daytime = np.around(daytime, decimals=2)
     df['daytime'] = daytime
 
     # Currently, there is one row per measurement, with separate columns for the
