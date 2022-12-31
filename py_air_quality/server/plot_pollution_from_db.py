@@ -34,12 +34,12 @@ combinations = [
         "experimental_condition": "outdoors_front",
         "sensor_type": "Nova Fitness SDS011",
     },
+    {
+        "measurement_location": "Alfeld",
+        "experimental_condition": "outdoors_terrace",
+        "sensor_type": "Nova Fitness SDS011",
+    },
 ]
-#    {
-#        "measurement_location": "Alfeld",
-#        "experimental_condition": "outdoors_terrace",
-#        "sensor_type": "Nova Fitness SDS011",
-#    },
 #    {
 #        "measurement_location": "Alfeld Wohnzimmer",
 #        "experimental_condition": "baseline",
