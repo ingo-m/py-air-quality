@@ -17,8 +17,6 @@ def plot_pollution(
 
     Separate plots for last 24 hours, weekends, weekdays, combined.
 
-    TODO: Clean up and replace respective code in `plot_pollution.py`.
-
     """
 
     yesterday_epoch = int(round((utc_now - timedelta(hours=24.0)).timestamp()))
@@ -45,15 +43,15 @@ def plot_pollution(
     # --------------------------------------------------------------------------
     # *** Create plots
 
-    df_weekend = df.loc[df["weekend"] == True]
-    df_weekday = df.loc[df["weekend"] == False]
+    # df_weekend = df.loc[df["weekend"] == True]
+    # df_weekday = df.loc[df["weekend"] == False]
     df_last_24_h = df.loc[df["last_24_h"] == True]
 
     dict_plot = {
         "last_24_h": df_last_24_h,
         "combined": df,
-        "weekday": df_weekday,
-        "weekend": df_weekend,
+        # "weekday": df_weekday,
+        # "weekend": df_weekend,
     }
 
     colours = [
