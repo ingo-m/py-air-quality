@@ -30,15 +30,15 @@ from py_air_quality.crud.read_csv_data import read_csv_data
 
 # Path of csv file with Nova Fitness SDS011 particulate sensor data, measured
 # with py-air-quality.
-path_air_data = "/home/john/Dropbox/Raspberry_Pi/air_pollution_data/measurement_mobile_2023_08_09_Kreuzberg.csv"
+path_air_data = "/home/john/Dropbox/Raspberry_Pi/air_pollution_data/measurement_mobile_2024_09_05_Kreuzberg.csv"
 
 # Path of csv file with GPS coordinates, from "GPS Logger" App.
 path_gps = (
-    "/home/john/Dropbox/Raspberry_Pi/air_pollution_data/20230906-224556_Kreuzberg.txt"
+    "/home/john/Dropbox/Raspberry_Pi/air_pollution_data/20240905-191548_Kreuzberg.txt"
 )
 
 # Output file path for plot:
-path_plot = "/home/john/Dropbox/Raspberry_Pi/air_pollution_plots/20230906-224556_Kreuzberg_pm25.png"
+path_plot = "/home/john/Dropbox/Raspberry_Pi/air_pollution_plots/20240905-191548_Kreuzberg_pm25.png"
 
 # Which pollutant to plot ('pm25' or 'pm10').
 pollutant = "pm25"
