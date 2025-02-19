@@ -30,15 +30,15 @@ from py_air_quality.crud.read_csv_data import read_csv_data
 
 # Path of csv file with Nova Fitness SDS011 particulate sensor data, measured
 # with py-air-quality.
-path_air_data = "/home/john/Dropbox/Raspberry_Pi/air_pollution_data/measurement_mobile_2024_09_05_Kreuzberg.csv"
+path_air_data = "/home/john/Dropbox/Raspberry_Pi/air_pollution_data/measurement_mobile_2025_02_19_Kreuzberg_2.csv"
 
 # Path of csv file with GPS coordinates, from "GPS Logger" App.
 path_gps = (
-    "/home/john/Dropbox/Raspberry_Pi/air_pollution_data/20240905-191548_Kreuzberg.txt"
+    "/home/john/Dropbox/Raspberry_Pi/air_pollution_data/20250219-140937_Kreuzberg.txt"
 )
 
 # Output file path for plot:
-path_plot = "/home/john/Dropbox/Raspberry_Pi/air_pollution_plots/20240905-191548_Kreuzberg_pm25.png"
+path_plot = "/home/john/Dropbox/Raspberry_Pi/air_pollution_plots/20250219-140937_Kreuzberg_pm25.png"
 
 # Which pollutant to plot ('pm25' or 'pm10').
 pollutant = "pm25"
@@ -173,11 +173,11 @@ for x, y in zip(df["longitude"].to_list(), df["latitude"].to_list()):
     x_coordinates.append(x_norm)
     y_coordinates.append(y_norm)
 
-colour_map = sns.color_palette("plasma_r", as_cmap=True)  # plasma_r YlOrRd
+colour_map = sns.color_palette("Reds", as_cmap=True)  # plasma_r OrRd RdPu
 
 # Minimum and maximum of colour map.
-vmin = np.floor(df[pollutant].min())  # Data-dependent colour scale minimum
-# vmin = 0.0  # Colour scale minimum = 0
+# vmin = np.floor(df[pollutant].min())  # Data-dependent colour scale minimum
+vmin = 0.0  # Colour scale minimum = 0
 vmax = np.ceil(df[pollutant].max())
 
 # Plot air pollution on map.
